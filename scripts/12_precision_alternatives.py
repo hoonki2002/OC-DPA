@@ -34,15 +34,16 @@ from ocdpa.system import plans
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--long", default="_long")
+ap.add_argument("--share", type=int, default=2, help="tiers per ADC lane (the best baseline of OLMoE is 2)")
 ap.add_argument("--out", default="cache/alternatives.json")
 args = ap.parse_args()
 npu = NPU(**NPU_CFG)
 
 
-def footprint(m, planes_1t1r, planes_xbar, scale_bits=None):
+def footprint(m, planes_1t1r, planes_xbar, scale_bits=None, share=16):
     """mm2 of a 16-tier stack holding every weight `planes_1t1r` planes in 1T1R and `planes_xbar` in crossbars."""
     params = m.n_moe * m.experts * 3 * m.hidden * m.moe_inter
-    spec = ([Tier(1, 128, 16, planes_1t1r)] if planes_1t1r else []) + [Tier(4, 256, 16, planes_xbar)]
+    spec = ([Tier(1, 128, share, planes_1t1r)] if planes_1t1r else []) + [Tier(4, 256, share, planes_xbar)]
     a = hetero_area(params, spec, tiers=TIERS, input_share=8)
     mem = a["mem_mm2"] + scale_storage_mm2(params, scale_bits)
     return dict(mem_mm2=mem, logic_mm2=a["logic_mm2"], footprint_mm2=max(mem, a["logic_mm2"]))
@@ -56,21 +57,21 @@ idx, gate = tr["idx"].astype(np.int64), tr["gate"]
 R = np.load(f"cache/{resid}"); R = R[R.shape[0] - idx.shape[0]:]
 L = idx.shape[0]
 loads = [np.bincount(cal[l].ravel(), minlength=m.experts) for l in range(L)]
-slots = [placement(loads[l], 16, True) for l in range(L)]
+slots = [placement(loads[l], args.share, True) for l in range(L)]
 k8, k4 = plans(idx, gate, R, 8, m.topk, False), plans(idx, gate, R, 4, m.topk, False)
 kd4 = plans(idx, gate, R, 4, m.topk, True)
 
 
 def run(kp, kd, scale_bits=None):
-    r = evaluate(m, idx, kp, kd, slots, 16, npu, scale_bits=scale_bits)
+    r = evaluate(m, idx, kp, kd, slots, args.share, npu, scale_bits=scale_bits)
     return dict(ttft_ms=r["prefill"]["ttft_ms"], energy_mJ=r["prefill"]["energy_mJ"], decode_tok_s=r["decode"]["tok_s"])
 
 
 rows = {
-    "8-bit":         dict(bits_per_weight=8.0,   **footprint(m, 2, 6), **run(k8, k8)),
-    "4-bit":         dict(bits_per_weight=4.0,   **footprint(m, 2, 2), **run(k4, k4)),
-    "4-bit + 8-bit": dict(bits_per_weight=12.0,  **footprint(m, 4, 8), **run(k4, k8)),
-    "OC-DPA":        dict(bits_per_weight=8 + (KMAX + 1) * SCALE_BITS / GS, **footprint(m, 2, 6, SCALE_BITS), **run(kd4, k8, SCALE_BITS)),
+    "8-bit":         dict(bits_per_weight=8.0,   **footprint(m, 2, 6, share=args.share), **run(k8, k8)),
+    "4-bit":         dict(bits_per_weight=4.0,   **footprint(m, 2, 2, share=args.share), **run(k4, k4)),
+    "4-bit + 8-bit": dict(bits_per_weight=12.0,  **footprint(m, 4, 8, share=args.share), **run(k4, k8)),
+    "OC-DPA":        dict(bits_per_weight=8 + (KMAX + 1) * SCALE_BITS / GS, **footprint(m, 2, 6, SCALE_BITS, args.share), **run(kd4, k8, SCALE_BITS)),
 }
 for r in rows.values():
     r["prefill_tok_s_mm2"] = 1024e3 / r["ttft_ms"] / r["footprint_mm2"]      # prompt tokens/s of TTFT per mm2
@@ -78,6 +79,6 @@ print(m.name)
 for name, r in rows.items():
     print(f"  {name:14s} {r['bits_per_weight']:6.2f} b/w  {r['footprint_mm2']:6.0f} mm2  TTFT {r['ttft_ms']:7.1f} ms  "
           f"{r['prefill_tok_s_mm2']:5.1f} tok/s/mm2  E {r['energy_mJ']:6.1f} mJ  decode {r['decode_tok_s']:5.1f} tok/s")
-mixed, crossbar = footprint(m, 2, 6)["footprint_mm2"], footprint(m, 0, 8)["footprint_mm2"]
+mixed, crossbar = footprint(m, 2, 6, share=args.share)["footprint_mm2"], footprint(m, 0, 8, share=args.share)["footprint_mm2"]
 print(f"  base planes in 1T1R (2 + 6 planes) vs all eight planes in crossbars: {mixed:.0f} vs {crossbar:.0f} mm2, {100 * (mixed / crossbar - 1):+.0f}%")
 json.dump({m.name: rows}, open(args.out, "w"), indent=1, default=float)

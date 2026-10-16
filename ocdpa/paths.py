@@ -9,7 +9,6 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 CACHE = Path(os.environ.get("OCDPA_CACHE", "cache"))
-CACHE.mkdir(parents=True, exist_ok=True)   # gitignored, so absent in a fresh clone
 NEUROSIM = Path(os.environ.get("NEUROSIM_DIR", REPO / "third_party" / "3D_NeuroSim_V1.0"))
 PROBE = NEUROSIM / "Monolithic3D" / "NeuroSIM" / "probe"        # one analog column read, per cell type
 PROBE3D = NEUROSIM / "Monolithic3D" / "NeuroSIM" / "probe3d"    # the same, split by memory/logic tier

@@ -162,9 +162,16 @@ class Tier:
 
 
 def hetero_area(params: float, tiers_spec: list[Tier], tiers=16, mux=8,
-                write_share=16, input_share=1):
+                write_share=16, input_share=1, lane_sets="kind"):
     """Footprint (mm2) of a stack holding `params` weights as 8 bit-planes,
     split across subarray kinds.
+
+    `lane_sets` says how the ADC lanes of the logic tier are provisioned. The timing model
+    (compare.layer_cost, Eq. 1 of the paper) reads the planes of an expert one after the other
+    through the lanes of its group, so the planes of one kind share one set of lanes through a
+    plane-select mux ("kind", the default): a lane set per tile position of each kind. "plane"
+    gives every plane its own lane set, which only fits hardware that reads planes in parallel;
+    it is how the earlier version of this model counted lanes.
 
     Every subarray reads 128 rows at a time -- the AnyBCQ group, so each
     column current carries one alpha -- and a 256-row crossbar takes two
@@ -179,6 +186,7 @@ def hetero_area(params: float, tiers_spec: list[Tier], tiers=16, mux=8,
     for t in tiers_spec:
         a = probe(22, mux, t.access, t.n)["comp_area_um2"]
         n_sub = params * t.planes / (t.n * t.n)
+        n_lane = n_sub if lane_sets == "plane" else params * min(t.planes, 1.0) / (t.n * t.n)
         reads = t.n // 128                                   # sequential 128-row reads
         buses = tiers // t.share * reads
         tsv = (t.n / input_share * TSV_DIGITAL_UM2 +
@@ -186,7 +194,7 @@ def hetero_area(params: float, tiers_spec: list[Tier], tiers=16, mux=8,
         sub = (a["array"] + a["wlSwitch"] + a["slSwitch"] + a["mux"] +
                a["muxDecoder"] + a["levelShift"] / write_share)
         m_tier = n_sub / tiers * (sub + tsv)
-        l_tier = n_sub / tiers * (t.n // mux * buses * lane_area + tsv)
+        l_tier = n_lane / tiers * (t.n // mux * buses * lane_area + tsv)
         mem += m_tier; logic += l_tier
         parts[f"a{t.access}/n{t.n}"] = dict(mem_mm2=m_tier / 1e6, logic_mm2=l_tier / 1e6,
                                             sub_um2=sub, tsv_um2=tsv)

@@ -14,7 +14,6 @@ Run first as a check: the relative error norm must reproduce the 6.1% / 7.3%
 quoted for the two cell types.
 """
 import sys, time
-from pathlib import Path
 import numpy as np
 from ocdpa.irdrop import mesh
 
@@ -52,7 +51,6 @@ if __name__ == "__main__":
         halves.append(g)
         print(f"crossbar 256x256 ({lab} half driven): relative error {100*e:.2f}%  gain {g.min():.3f}..{g.max():.3f} [{time.time()-t0:.0f}s]", flush=True)
     out["xbar"] = np.stack(halves)
-    Path("cache").mkdir(exist_ok=True)
     np.savez("cache/irdrop_gain.npz", **out)
     for key, label in (("1t1r", "1T1R"), ("xbar", "crossbar")):          # what remains after the global gain trim ("cal")
         g = out[key] / out[key].mean()

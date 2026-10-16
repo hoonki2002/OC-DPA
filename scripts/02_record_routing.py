@@ -65,6 +65,5 @@ with torch.no_grad():
 L = sorted(rec.idx)
 idx = np.stack([np.concatenate(rec.idx[l]) for l in L])
 gate = np.stack([np.concatenate(rec.gate[l]) for l in L])
-Path("cache").mkdir(exist_ok=True)
 np.savez_compressed(f"cache/trace_{args.tag}.npz", idx=idx, gate=gate)
 print(f"saved cache/trace_{args.tag}.npz idx {idx.shape} [{time.time()-t0:.0f}s]")

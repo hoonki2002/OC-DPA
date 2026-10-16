@@ -1,6 +1,6 @@
 """Figures 1, 4 and 5 of the paper, drawn from the JSON files the pipeline writes.
 
-  Fig. 1  decode latency (experts on flash vs on AIMC) and the cost of sharing an ADC lane
+  Fig. 1  decode latency (experts on flash vs on AIMC) and what sharing an ADC lane buys: TTFT, memory and logic die
           <- scripts/10_hardware.py
   Fig. 4  KL divergence against TTFT for the prefill budget k-bar = 2..8, OC-DPA vs uniform
           <- scripts/10_hardware.py (TTFT) and scripts/20_kl_sweep.py --noise "mixed,0.01,0.02,cal" --budgets 2,3,4,5,6,7
@@ -89,28 +89,42 @@ def fig1(hw, out):
     ax.legend([Patch(fc=flash_c, ec="black", lw=0.6), Patch(fc=aimc_c, ec="black", lw=0.6), Patch(fc=npu_c, ec="black", lw=0.6)],
               ["experts on flash", "experts on AIMC", "NPU"], loc="upper right", frameon=False, fontsize=6.5,
               handlelength=1.1, handletextpad=0.4, labelspacing=0.3, borderaxespad=0.2)
-    s = [1, 2, 4, 8, 16]
-    for key, col in (("olmoe", "#34495E"), ("deepseek", "#8E44AD")):
-        sh = hw[NAMES[key]]["sharing"]
-        pre = [sh[f"s{v}_grouped"]["ttft_ms"] / sh["s1_grouped"]["ttft_ms"] for v in s]
-        dec = [sh[f"s{v}_grouped"]["decode_ms"] / sh["s1_grouped"]["decode_ms"] for v in s]
-        bx.plot(s, dec, "--^", color=col, lw=1.3, ms=3.6, mfc="white", mew=1.0, zorder=3)
-        bx.plot(s, pre, "-s", color=col, lw=1.6, ms=3.8, zorder=4)
-        bx.annotate(f"{pre[-1]:.2f}", (16, pre[-1]), textcoords="offset points", xytext=(-6, 0), ha="right",
-                    va="center", fontsize=7, color=col)
-    bx.set_xscale("log", base=2)
-    bx.xaxis.set_major_locator(FixedLocator(s)); bx.xaxis.set_minor_formatter(NullFormatter())
-    bx.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v)}"))
-    bx.set_xlim(0.85, 18.5); bx.set_ylim(0.5, 5.2); bx.set_yticks([1, 2, 3, 4])
-    bx.set_xlabel(r"Tiers sharing one ADC lane, $s$", fontsize=8); bx.set_ylabel(r"Relative to $s$=1", fontsize=8)
-    bx.set_title("Effect of tier sharing", fontsize=9)
-    bx.tick_params(labelsize=7.5); bx.grid(True, which="major", color="0.85", lw=0.6)
-    h = [Line2D([], [], color="#34495E", lw=1.6), Line2D([], [], color="#8E44AD", lw=1.6),
-         Line2D([], [], color="0.35", ls="-", marker="s", ms=3.6, lw=1.5),
-         Line2D([], [], color="0.35", ls="--", marker="^", ms=3.6, mfc="white", lw=1.3)]
-    bx.legend(h, list(NAMES.values()) + ["prefill TTFT", "decode latency"], loc="upper left", frameon=False,
-              fontsize=6.5, handlelength=2.0, handletextpad=0.5, labelspacing=0.3, borderaxespad=0.3)
-    fig.tight_layout(w_pad=1.0)
+    # right: what sharing buys, OLMoE. Top: prefill TTFT. Bottom: the memory and the logic die; the larger one is the footprint.
+    sv = [1, 2, 4, 8, 16]
+    sh = olmoe["sharing"]
+    ttft = [sh[f"s{v}_grouped"]["ttft_ms"] for v in sv]
+    mem = [sh[f"s{v}_grouped"]["mem_mm2"] for v in sv]
+    logic = [sh[f"s{v}_grouped"]["logic_mm2"] for v in sv]
+    bal = min(range(len(sv)), key=lambda i: abs(mem[i] - logic[i]) / mem[i])          # dies about equal
+    sub = bx.get_subplotspec().subgridspec(2, 1, hspace=0.12)
+    fig.delaxes(bx)
+    tx = fig.add_subplot(sub[0]); ax2 = fig.add_subplot(sub[1], sharex=tx)
+    c_mem, c_log = "#34495E", "#E08A1E"
+    tx.plot(sv, ttft, "-s", color="black", lw=1.6, ms=3.8, zorder=4)
+    tx.set_yscale("log"); tx.set_ylim(150, 1700); tx.set_yticks([200, 500, 1000])
+    tx.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}")); tx.yaxis.set_minor_formatter(NullFormatter())
+    tx.set_ylabel("Prefill TTFT (ms)", fontsize=7.5)
+    tx.set_title("Effect of tier sharing (OLMoE-1B-7B)", fontsize=9)
+    for i in (0, len(sv) - 1):
+        tx.annotate(f"{ttft[i]:.0f}", (sv[i], ttft[i]), textcoords="offset points", xytext=(0, 5), ha="center", fontsize=6.5)
+    ax2.plot(sv, mem, "-o", color=c_mem, lw=1.5, ms=3.6, zorder=4)
+    ax2.plot(sv, logic, "--^", color=c_log, lw=1.5, ms=3.8, mfc="white", mew=1.0, zorder=4)
+    ax2.set_yscale("log"); ax2.set_ylim(22, 600); ax2.set_yticks([30, 100, 300])
+    ax2.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}")); ax2.yaxis.set_minor_formatter(NullFormatter())
+    ax2.set_ylabel("Die area (mm$^2$)", fontsize=7.5)
+    ax2.set_xscale("log", base=2)
+    ax2.xaxis.set_major_locator(FixedLocator(sv)); ax2.xaxis.set_minor_formatter(NullFormatter())
+    ax2.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{int(v)}"))
+    ax2.set_xlim(0.85, 18.5); ax2.set_xlabel(r"Tiers sharing one ADC lane, $s$", fontsize=8)
+    for a_ in (tx, ax2):
+        a_.tick_params(labelsize=7); a_.grid(True, which="major", color="0.85", lw=0.6)
+        a_.axvline(sv[bal], color="0.55", ls=":", lw=1.0, zorder=1)
+    plt.setp(tx.get_xticklabels(), visible=False)
+    ax2.text(sv[bal] * 1.1, 33, "dies about\nequal", fontsize=6.5, color="0.3", va="center")
+    ax2.legend([Line2D([], [], color=c_mem, marker="o", ms=3.6, lw=1.5), Line2D([], [], color=c_log, ls="--", marker="^", ms=3.8, mfc="white", lw=1.5)],
+               ["memory", "logic"], loc="lower left", frameon=False, fontsize=6.5, handlelength=2.0, handletextpad=0.4,
+               labelspacing=0.25, borderaxespad=0.3)
+    fig.subplots_adjust(left=0.085, right=0.985, top=0.93, bottom=0.17, wspace=0.42)
     save(fig, out, "fig1_motivation")
 
 

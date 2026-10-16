@@ -116,6 +116,7 @@ MODELS = [
     Model("OLMoE-1B-7B", 16, 2048, 16, 16, 128, 64, 8, 1024, 50304),
     Model("DeepSeek-MoE-16B", 28, 2048, 16, 16, 128, 64, 6, 1408, 102400,
           shared_inter=2 * 1408, first_dense=1, dense_inter=10944),
+    Model("Qwen3-30B-A3B", 48, 2048, 32, 4, 128, 128, 8, 768, 151936),
 ]
 
 

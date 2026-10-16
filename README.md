@@ -23,9 +23,9 @@ export DPAMOE_DIR=$PWD/../DPA-MoE      # provides the any-precision encoder (no 
 git clone https://github.com/neurosim/3D_NeuroSim_V1.0.git third_party/3D_NeuroSim_V1.0   # CC BY-NC 4.0, not redistributed here
 scripts/05_build_neurosim.sh           # copies neurosim_patch/ in and builds probe, probe3d, allocator, ...
 ```
-Models and WikiText-2 are read from the local Hugging Face cache. Outputs go to `./cache`, which is created on first use;
-the scripts read and write `cache/` relative to the working directory, so run every command from the repository root.
-`NEUROSIM_DIR` and `DPAMOE_DIR` override the locations of the two external checkouts (see `ocdpa/paths.py`).
+Models and WikiText-2 are read from the local Hugging Face cache. Outputs go to `./cache`
+(`OCDPA_CACHE`, `NEUROSIM_DIR`, `DPAMOE_DIR` override the locations; see `ocdpa/paths.py`).
+Run every command from the repository root.
 
 ## Encoding the experts
 
@@ -49,7 +49,7 @@ Run in this order; each step reads what the previous ones wrote to `cache/`.
 | 3 | `03_profile_residual.py` (`03b_...large.py` when the planes do not fit on the GPU) | residual table `R[layer, expert, k]` |
 | 4 | `04_calibrate_irdrop.py` | `cache/irdrop_gain.npz`, the column gains of the IR-drop model |
 | 5 | `05_build_neurosim.sh` | NeuroSim driver programs |
-| 6 | `10_hardware.py` | design comparison, TTFT ablation, budget and sharing sweeps (`cache/hardware.json`) |
+| 6 | `10_hardware.py`, `16_sharing_sweep.py`, `17_adc_sweep.py` | design comparison, TTFT ablation, budget and sharing sweeps (`cache/hardware.json`); memory and logic die, TTFT and throughput per area against the sharing, with and without DPA (`cache/sharing_sweep.json`); the same over both lane-count knobs, tiers per lane and columns per ADC, with the best baseline and the best OC-DPA (`cache/adc_sweep.json`) |
 | 7 | `11_allocator_ppa.py`, `14_check_allocator.py` | allocator cycles, area, energy; agreement of the on-chip allocator with the dynamic program |
 | 8 | `13_encode_native_gptq.py --model allenai/OLMoE-1B-7B-0125 --out cache/planes_olmoe_gptq` | GPTQ 4- and 8-bit copies of every routed expert (`..._gptq4`, `..._gptq8`); OLMoE only, as in the paper |
 | 9 | `12_precision_alternatives.py` | area, TTFT and throughput per area of the fixed-precision alternatives (OLMoE) |
@@ -69,12 +69,13 @@ approximately.
 
 | in the paper | produced by |
 |---|---|
-| Table I (hardware comparison) | `10_hardware.py` |
-| Table II, TTFT ablation rows | mm², TTFT and throughput per area: `10_hardware.py`; KL: `20_kl_sweep.py --noise "mixed,0.01,0.02,cal" --budgets 4` |
-| Table II, static 4-bit and 4 + 8-bit rows | `12_precision_alternatives.py` (mm², TTFT, throughput per area); KL: `13_encode_native_gptq.py`, then `20_kl_sweep.py --planes cache/planes_olmoe_gptq8 --native-planes cache/planes_olmoe_gptq4 --native-only --home cpu --noise "mixed,0.01,0.02,cal"` |
+| Table I (hardware comparison: 3D-AIMC, best baseline, OC-DPA) | `10_hardware.py` (the sharing of the best baseline and of OC-DPA per model is `BEST_SHARE` in that script, chosen with `16_sharing_sweep.py`) |
+| Table II, TTFT ablation rows (OLMoE, s = 2) | mm², TTFT and throughput per area: `10_hardware.py`; KL: `20_kl_sweep.py --noise "mixed,0.01,0.02,cal" --budgets 4` |
+| Table II, static 4-bit and 4 + 8-bit rows | `12_precision_alternatives.py --share 2` (mm², TTFT, throughput per area); KL: `13_encode_native_gptq.py`, then `20_kl_sweep.py --planes cache/planes_olmoe_gptq8 --native-planes cache/planes_olmoe_gptq4 --native-only --home cpu --noise "mixed,0.01,0.02,cal"` |
 | Table III (downstream accuracy) | `21_downstream_choice.py`, `22_downstream_generation.py` at prefill k-bar = 4, decode k = 8 |
-| Fig. 1 (decode latency, effect of tier sharing) | `10_hardware.py`, `30_make_figures.py` |
-| Fig. 4 (budget sweep) | `20_kl_sweep.py --noise "mixed,0.01,0.02,cal" --budgets 2,3,4,5,6,7`, `10_hardware.py`, `30_make_figures.py` |
+| Fig. 1 (decode latency; TTFT, memory and logic die against the sharing) | `10_hardware.py`, `30_make_figures.py` |
+| Sharing sweep with and without DPA (memory and logic die, TTFT, throughput per area) | `16_sharing_sweep.py`, `17_adc_sweep.py` |
+| Fig. 4 (budget sweep, TTFT at the sharing of OC-DPA) | `20_kl_sweep.py --noise "mixed,0.01,0.02,cal" --budgets 2,3,4,5,6,7`, `10_hardware.py`, `30_make_figures.py` |
 | Fig. 5 (sigma sweep, dense layers on AIMC) | `20_kl_sweep.py --noise "mixed,s,2s,cal;..."` with and without `--dense attn,router,head`, `30_make_figures.py` |
 | Sec. II-A (ADC share of a subarray read) | `python -m ocdpa.hw.neurosim` |
 | Sec. II-B, III-B (scales per plane, share of the base planes) | `15_plane_statistics.py` |
@@ -83,6 +84,14 @@ approximately.
 | Sec. III-C (the on-chip allocator reproduces the dynamic program) | `14_check_allocator.py` |
 | Sec. IV-B (energy shares, decode speed and energy against NPU+flash) | printed by `10_hardware.py` |
 | Figs. 2 and 3 (architecture, allocator datapath) | drawn by hand |
+
+## Lane model
+
+The timing model reads the planes of an expert one after the other through the ADC lanes of its sharing
+group (Eq. 1 of the paper), so the area model provisions lanes the same way: the planes of one kind of subarray
+(1T1R or crossbar) share one set of lanes per tile position through a plane-select mux
+(`hetero_area(..., lane_sets="kind")`, `ocdpa/hw/stack.py`). `lane_sets="plane"` gives every plane its own lanes,
+which fits hardware that reads planes in parallel but not this timing model.
 
 ## Static (fixed-precision) copies
 

@@ -1,8 +1,8 @@
 """Load a MoE model without its expert tensors.
 
 The experts are replaced by bit-planes, so reading the released expert weights
-would waste the memory twice over -- for DeepSeek-MoE-16B they are most of the
-16 billion parameters. This builds the module tree from the config and fills in
+would waste the memory twice over -- for Qwen3-30B-A3B they are 29 of the 30
+billion parameters. This builds the module tree from the config and fills in
 only the tensors the analog path does not provide.
 """
 from __future__ import annotations

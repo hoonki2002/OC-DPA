@@ -3,13 +3,13 @@
 For OLMoE-1B-7B and DeepSeek-MoE-16B, on a 1024-token prompt and batch-1 decoding:
 
   designs   3D-AIMC (16 tiers share a lane, experts in order, all planes)
-            G&Y 2-way / 4-way (load-sorted grouping, all planes)
             + load-sorted grouping on 16 tiers (all planes)
-            uniform k-bar = 4 on 16 tiers (load-sorted)
-            OC-DPA: 16 tiers, load-sorted, DPA k-bar = 4 in prefill, k = 8 in decode
-  budget    TTFT and prefill energy of uniform and DPA allocation for k-bar = 2..8 (16 tiers,
-            load-sorted, decode at k = 8)
-  sharing   TTFT and decode latency per token for s = 1, 2, 4, 8, 16 tiers per
+            best baseline: the sharing with the highest throughput per area (scripts/16), all planes
+            + uniform k-bar = 4 at the sharing of OC-DPA
+            OC-DPA: DPA k-bar = 4 in prefill, k = 8 in decode, at its own best sharing
+  budget    TTFT and prefill energy of uniform and DPA allocation for k-bar = 2..8 (at the sharing
+            of OC-DPA, load-sorted, decode at k = 8)
+  sharing   TTFT, decode latency per token and the memory and logic dies for s = 1, 2, 4, 8, 16 tiers per
             ADC lane, with experts in order and with load-sorted grouping
   decode    latency per token split into NPU and experts, experts on UFS flash
             (NPU+flash) versus experts on AIMC
@@ -37,6 +37,9 @@ ap.add_argument("--out", default="cache/hardware.json")
 args = ap.parse_args()
 
 npu = NPU(**NPU_CFG)
+# tiers per ADC lane of the best baseline and of OC-DPA for each model: the sharing with the highest
+# prefill throughput per area in scripts/16_sharing_sweep.py (mux 8:1)
+BEST_SHARE = {"OLMoE-1B-7B": (2, 2), "DeepSeek-MoE-16B": (4, 8)}
 out = {}
 for m in MODELS:
     if m.name not in args.models.split(","):
@@ -57,25 +60,26 @@ for m in MODELS:
         slots = [placement(loads[l], share, grouped) for l in range(L)]
         return evaluate(m, idx, k_pre, k_dec, slots, share, npu, scale_bits=scale_bits)
 
+    s_base, s_oc = BEST_SHARE[m.name]
     designs = {
         "3D-AIMC":                       run(16, False, k8, k8),
-        "G&Y 2-way":                     run(2, True, k8, k8),
-        "G&Y 4-way":                     run(4, True, k8, k8),
         "16 tiers + load-sorted grouping": run(16, True, k8, k8),
-        f"16 tiers + uniform k={args.kbar}":  run(16, True, k_uni, k8, SCALE_BITS),   # any-precision encoding: scales stored
-        "OC-DPA":                        run(16, True, k_dpa, k8, SCALE_BITS),
+        "Best baseline":                 run(s_base, True, k8, k8),
+        f"Uniform k={args.kbar}":        run(s_oc, True, k_uni, k8, SCALE_BITS),   # any-precision encoding: scales stored
+        "OC-DPA":                        run(s_oc, True, k_dpa, k8, SCALE_BITS),
     }
     sharing = {}
     for s in (1, 2, 4, 8, 16):
         for grouped in (False, True):
             r = run(s, grouped, k8, k8)
             sharing[f"s{s}_{'grouped' if grouped else 'in_order'}"] = dict(
-                ttft_ms=r["prefill"]["ttft_ms"], decode_ms=r["decode"]["ms"])
+                ttft_ms=r["prefill"]["ttft_ms"], decode_ms=r["decode"]["ms"], mem_mm2=r["mem_mm2"],
+                logic_mm2=r["logic_mm2"], footprint_mm2=r["footprint_mm2"])
 
     budget = {}
     for kb in range(2, 9):
         for name, dpa in (("uniform", False), ("DPA", True)):
-            r = run(16, True, plans(idx, gate, R, kb, m.topk, dpa), k8, SCALE_BITS)
+            r = run(s_oc, True, plans(idx, gate, R, kb, m.topk, dpa), k8, SCALE_BITS)
             budget[f"{name}_{kb}"] = dict(ttft_ms=r["prefill"]["ttft_ms"], energy_mJ=r["prefill"]["energy_mJ"])
 
     # decode, experts on flash (all planes, no DRAM expert cache, oracle prefetch) vs on AIMC

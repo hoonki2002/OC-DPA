@@ -13,9 +13,9 @@ three use the same NPU, LPDDR, heterogeneous-cell memory tiers and the same
 analog cost per conversion, so the only differences are how lanes are shared,
 how experts are placed on them, and how many planes are read.
 
-Load profiles for the grouping come from the short routing trace (wikitext,
-2,048 tokens). Costs are read from the long trace (8,192 tokens, same start):
-prefill on a 1,024-token window and decode on 512 tokens (see `evaluate`).
+Load profiles come from the short routing trace (wikitext, 2,048 tokens);
+every cost is measured on the long trace (8,192 tokens), so the grouping
+never sees the text it is scored on.
 """
 from __future__ import annotations
 
@@ -31,7 +31,8 @@ from ocdpa.hw.workload import dense
 
 TIERS = 16
 SPEC = {"OLMoE-1B-7B": ("olmoe", "residual_olmoe.npy"),
-        "DeepSeek-MoE-16B": ("deepseek", "residual_deepseek.npy")}
+        "DeepSeek-MoE-16B": ("deepseek", "residual_deepseek.npy"),
+        "Qwen3-30B-A3B": ("qwen3", "residual_qwen3.npy")}
 HETERO = lambda s: [Tier(1, 128, s, 2), Tier(4, 256, s, 6)]
 
 
@@ -91,9 +92,9 @@ SHARED_MUX, SHARED_K = 4, 8
 SHARED_ON_AIMC = True
 
 
-def shared_cost(m, P, pipelined):
+def shared_cost(m, P, pipelined, mux=None):
     """(mJ, ms) of the shared experts of one layer for P tokens."""
-    st = Stack(TIERS, SHARED_MUX, 1, 16)
+    st = Stack(TIERS, mux or SHARED_MUX, 1, 16)
     groups = 3 * m.hidden * m.shared_inter / 128
     planes = P * SHARED_K
     e_mj = (groups * INPUT_BITS * planes * st.pj_per_conv()["total"] +
@@ -112,27 +113,28 @@ def scale_storage_mm2(params, scale_bits):
     return hetero_area(params, [Tier(4, 256, 16, bits_per_weight)], tiers=TIERS, input_share=8)["mem_mm2"]
 
 
-def shared_area(m, scale_bits=None):
+def shared_area(m, scale_bits=None, mux=None):
     if not m.shared_inter:
         return dict(mem_mm2=0.0, logic_mm2=0.0)
     params = m.n_moe * 3 * m.hidden * m.shared_inter
     a = hetero_area(params, [Tier(1, 128, 1, 2), Tier(4, 256, 1, 6)], tiers=TIERS,
-                    mux=SHARED_MUX, input_share=8)
+                    mux=mux or SHARED_MUX, input_share=8)
     a["mem_mm2"] += scale_storage_mm2(params, scale_bits)
     return a
 
 
-def evaluate(m, idx, k_pre, k_dec, slots, share, npu, P=1024, warm=512, scale_bits=None):
+def evaluate(m, idx, k_pre, k_dec, slots, share, npu, P=1024, warm=512, scale_bits=None, mux=8, shared_mux=None):
     """Prefill (TTFT, energy), batch-1 decode and footprint of one design. `scale_bits` is the
-    storage width of alpha/beta for designs that use the any-precision encoding (None: plain bit-slicing)."""
-    st = Stack(TIERS, 8, share, 16)
+    storage width of alpha/beta for designs that use the any-precision encoding (None: plain bit-slicing).
+    `mux` is the number of columns per ADC lane of the routed experts, `shared_mux` that of the shared experts."""
+    st = Stack(TIERS, mux, share, 16)
     L = idx.shape[0]
     on = SHARED_ON_AIMC and m.shared_inter > 0
     m_npu = replace(m, shared_inter=0) if on else m   # shared experts in the stack
     # prefill of P tokens, scored on the second window of the long trace
     d = dense(m_npu, npu, 1, P, P)
     e = t = 0.0
-    sh_e, sh_t = shared_cost(m, P, True) if on else (0.0, 0.0)
+    sh_e, sh_t = shared_cost(m, P, True, shared_mux) if on else (0.0, 0.0)
     for l in range(L):
         de, dt = layer_cost(m, st, idx[l, P:2 * P], k_pre[l, P:2 * P], slots[l], True)
         e += de + sh_e; t += max(dt, sh_t)
@@ -140,7 +142,7 @@ def evaluate(m, idx, k_pre, k_dec, slots, share, npu, P=1024, warm=512, scale_bi
                energy_mJ=d["mJ"] + e, expert_mJ=e)
     # batch-1 decode, mean over tokens after the warm-up
     dd = dense_step(m_npu, NPU(), 1, 1024)
-    sh_e, sh_t = shared_cost(m, 1, False) if on else (0.0, 0.0)
+    sh_e, sh_t = shared_cost(m, 1, False, shared_mux) if on else (0.0, 0.0)
     e = t = 0.0
     rows = slice(warm, warm + 512)
     for l in range(L):
@@ -149,8 +151,8 @@ def evaluate(m, idx, k_pre, k_dec, slots, share, npu, P=1024, warm=512, scale_bi
     dec = dict(ms=dd["latency_ms"] + t, tok_s=1e3 / (dd["latency_ms"] + t),
                energy_mJ=dd["dram_mJ"] + e)
     params = m.n_moe * m.experts * 3 * m.hidden * m.moe_inter
-    area = hetero_area(params, HETERO(share), tiers=TIERS, input_share=8)
-    sa = shared_area(m, scale_bits) if on else dict(mem_mm2=0.0, logic_mm2=0.0)
+    area = hetero_area(params, HETERO(share), tiers=TIERS, mux=mux, input_share=8)
+    sa = shared_area(m, scale_bits, shared_mux) if on else dict(mem_mm2=0.0, logic_mm2=0.0)
     mem = area["mem_mm2"] + sa["mem_mm2"] + scale_storage_mm2(params, scale_bits)
     logic = area["logic_mm2"] + sa["logic_mm2"]
     return dict(prefill=pre, decode=dec, footprint_mm2=max(mem, logic),
