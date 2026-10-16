@@ -13,9 +13,9 @@ three use the same NPU, LPDDR, heterogeneous-cell memory tiers and the same
 analog cost per conversion, so the only differences are how lanes are shared,
 how experts are placed on them, and how many planes are read.
 
-Load profiles come from the short routing trace (wikitext, 2,048 tokens);
-every cost is measured on the long trace (8,192 tokens), so the grouping
-never sees the text it is scored on.
+Load profiles for the grouping come from the short routing trace (wikitext,
+2,048 tokens). Costs are read from the long trace (8,192 tokens, same start):
+prefill on a 1,024-token window and decode on 512 tokens (see `evaluate`).
 """
 from __future__ import annotations
 
@@ -31,8 +31,7 @@ from ocdpa.hw.workload import dense
 
 TIERS = 16
 SPEC = {"OLMoE-1B-7B": ("olmoe", "residual_olmoe.npy"),
-        "DeepSeek-MoE-16B": ("deepseek", "residual_deepseek.npy"),
-        "Qwen3-30B-A3B": ("qwen3", "residual_qwen3.npy")}
+        "DeepSeek-MoE-16B": ("deepseek", "residual_deepseek.npy")}
 HETERO = lambda s: [Tier(1, 128, s, 2), Tier(4, 256, s, 6)]
 
 

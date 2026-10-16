@@ -21,14 +21,14 @@ from ocdpa.fp_experts import FPExperts
 
 KMIN = 2
 ap = argparse.ArgumentParser()
-ap.add_argument("--model", default="Qwen/Qwen3-30B-A3B")
-ap.add_argument("--planes", default="cache/planes_qwen3")
+ap.add_argument("--model", default="allenai/OLMoE-1B-7B-0125")
+ap.add_argument("--planes", default="cache/planes_olmoe")
 ap.add_argument("--tokens", type=int, default=2048)
 ap.add_argument("--scale-bits", type=int, default=8, help="storage width of alpha/beta (log code); 0 keeps fp16")
 ap.add_argument("--adc-bits", type=int, default=8)
 ap.add_argument("--variation", type=float, default=0.0)
 ap.add_argument("--layers", type=int, default=0, help="stop after this many layers (0 = all)")
-ap.add_argument("--out", default="cache/residual_qwen3.npy")
+ap.add_argument("--out", default="cache/residual_olmoe.npy")
 args = ap.parse_args()
 bits = None if args.adc_bits == 0 else args.adc_bits
 
