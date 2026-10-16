@@ -1,0 +1,11 @@
+The driver programs in this directory (allocator.cpp, npu_cost.cpp, probe.cpp,
+probe3d.cpp, scaleunit.cpp, tsvprobe.cpp) are written against, and compiled
+with, 3D+NeuroSim V1.0 by Prof. Shimeng Yu's group, Georgia Institute of
+Technology (https://github.com/neurosim/3D_NeuroSim_V1.0).
+
+3D+NeuroSim is distributed under the Creative Commons Attribution-NonCommercial
+4.0 International License (https://creativecommons.org/licenses/by-nc/4.0/).
+To the extent that these files reproduce or adapt NeuroSim code, those parts
+remain under CC BY-NC 4.0, including its non-commercial condition; the MIT
+License in the repository root does not apply to them. NeuroSim itself is not
+redistributed in this repository.
