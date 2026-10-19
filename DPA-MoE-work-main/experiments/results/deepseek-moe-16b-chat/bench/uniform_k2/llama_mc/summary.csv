@@ -1,5 +1,0 @@
-config,benchmark,n_total,n_parallel,ctx_size,batch_size,ubatch_size,n_gpu_layers,single_flight,serial_np1,acc_pct,stderr_pct,profile_file,method,log
-uniform_k2,arc_c,1172,8,4096,2048,512,999,False,False,27.4744,1.3045,,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/bench/uniform_k2/llama_mc/arc_c.log
-uniform_k2,arc_e,570,8,4096,2048,512,999,False,False,53.1579,2.0919,,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/bench/uniform_k2/llama_mc/arc_e.log
-uniform_k2,piqa,1838,5,4096,2048,512,999,False,False,65.6148,1.1082,,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/bench/uniform_k2/llama_mc/piqa.log
-uniform_k2,winogrande,1267,5,4096,2048,512,999,False,False,52.8019,1.403,,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/bench/uniform_k2/llama_mc/winogrande.log

@@ -1,2 +1,0 @@
-config,benchmark,n_total,n_parallel,ctx_size,batch_size,ubatch_size,n_gpu_layers,single_flight,serial_np1,acc_pct,stderr_pct,profile_file,method,log
-uniform_k6,piqa,1838,8,4096,2048,512,999,False,False,78.7269,0.9548,,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/uniform_k6/llama_mc/piqa.log

@@ -1,2 +1,0 @@
-config,model,benchmark,series,label,mode,K_bar,effective_gb,chunks,metrics_source,mean_kld,median_kld,max_kld,same_top_p_pct,method,log
-Q2_K,Qwen3-30B-A3B,kld,baseline,Q2_K,baseline,,11.331282944,2,raw_log,0.161326,0.059314,9.264556,84.05,llama-perplexity --kl-divergence,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/Q2_K/data/kld.log
