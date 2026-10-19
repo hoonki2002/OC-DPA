@@ -1,0 +1,20 @@
+OC-DPA
+Copyright (c) 2026 Hoonki Lee, Jaeyun Kim, Hyuntaek Jung, Haechan Shin, Sangyeob Kim
+Released under the MIT License (see LICENSE), except where noted below.
+
+1. Any-precision encoding of the experts (ocdpa/encoder.py)
+   The encoding follows AnyBCQ's progressive precision expansion: nested sign planes with one shared, descending scale
+   set and an offset per group of 128 inputs, fitted weight-only and progressively from 2 to 8 planes. The numerical kernels of the encoder
+   (greedy initialisation, least-squares refinement, nearest-level assignment, conjugate gradient) are adapted from
+   AnyBCQ, https://github.com/naver-aics/anybcq,
+   Copyright (c) 2025-present NAVER Cloud Corp., licensed under the Apache License, Version 2.0.
+   AnyBCQ in turn refers to https://github.com/allenbai01/ProxQuant.
+   Changes: only the asymmetric (offset) variant without sample weights is kept, the kernels and the progressive
+   expansion are gathered in one module, and unrelated code (training, packing, evaluation) is removed.
+   The upstream license and notice are reproduced in licenses/AnyBCQ-LICENSE-Apache-2.0.txt and
+   licenses/AnyBCQ-NOTICE.txt.
+
+2. Driver programs for 3D+NeuroSim (neurosim_patch/)
+   These programs are built against 3D+NeuroSim V1.0, https://github.com/neurosim/3D_NeuroSim_V1.0
+   (CC BY-NC 4.0), which is not included. Building and using them is subject to NeuroSim's license, including its
+   non-commercial condition.
