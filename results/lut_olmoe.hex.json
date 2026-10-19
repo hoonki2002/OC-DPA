@@ -1,0 +1,12 @@
+{
+ "layers": 16,
+ "experts": 64,
+ "rows": 1024,
+ "entries_per_row": 6,
+ "bits": 9,
+ "bytes": 6912,
+ "code_min": -256,
+ "code_max": 0,
+ "saturated_low": 18,
+ "saturated_high": 0
+}
