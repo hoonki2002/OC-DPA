@@ -1,0 +1,11 @@
+{
+  "config": "uniform_k3",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "piqa",
+  "n_total": 1838,
+  "n_parallel": 8,
+  "acc_pct": 77.0403,
+  "stderr_pct": 0.9813,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/uniform_k3/llama_mc/piqa.log"
+}

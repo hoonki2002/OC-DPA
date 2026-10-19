@@ -1,0 +1,18 @@
+{
+  "K_bar": "6.0000",
+  "benchmark": "kld",
+  "chunks": 10,
+  "config": "uniform_k6",
+  "effective_gb": "14.774517922",
+  "label": "K=6",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/kld/uniform_k6/data/kld.log",
+  "max_kld": 3.758672,
+  "mean_kld": 0.025717,
+  "median_kld": 0.009746,
+  "method": "llama-perplexity --kl-divergence",
+  "metrics_source": "raw_log",
+  "mode": "uniform",
+  "model": "deepseek-moe-16b-chat",
+  "same_top_p_pct": 93.322,
+  "series": "uniform"
+}

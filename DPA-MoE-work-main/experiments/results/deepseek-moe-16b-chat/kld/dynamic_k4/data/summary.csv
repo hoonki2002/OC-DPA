@@ -1,0 +1,2 @@
+config,model,benchmark,series,label,mode,K_bar,effective_gb,chunks,metrics_source,mean_kld,median_kld,max_kld,same_top_p_pct,method,log
+dynamic_k4,deepseek-moe-16b-chat,kld,dynamic_kbar,K̄=4,dynamic,4,10.57025245,10,raw_log,0.04312,0.017847,6.169396,90.992,llama-perplexity --kl-divergence,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/kld/dynamic_k4/data/kld.log

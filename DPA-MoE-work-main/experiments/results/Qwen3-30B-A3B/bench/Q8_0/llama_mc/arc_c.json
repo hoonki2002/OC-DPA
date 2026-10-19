@@ -1,0 +1,10 @@
+{
+  "config": "Q8_0",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "arc_c",
+  "n_total": 1172,
+  "acc_pct": 54.9488,
+  "stderr_pct": 1.454,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/arc_c.log"
+}

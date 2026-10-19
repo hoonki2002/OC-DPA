@@ -1,0 +1,15 @@
+{
+  "config": "dynamic_k4",
+  "metric_diffs_vs_aggregate": {},
+  "metrics_source": "raw_log",
+  "model": "Qwen3-30B-A3B",
+  "raw_stderr": "/home/jaeyun/workspace/StreamLLM/cache/experiment/Qwen3-30B-A3B/3_dynamic_precision/bench/kld_kbar4_dynamic.err",
+  "raw_stderr_copied": false,
+  "raw_stderr_exists": true,
+  "raw_stdout": "/home/jaeyun/workspace/StreamLLM/cache/experiment/Qwen3-30B-A3B/3_dynamic_precision/bench/kld_kbar4_dynamic.out",
+  "raw_stdout_exists": true,
+  "raw_stdout_parseable": true,
+  "raw_stdout_sha256": "2dca0bcade6c3da9de4ecfaaf98a93b412a41abdfe2d61b518f37f5e79080b86",
+  "source_layout_summary_csv": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/layout_summary.csv",
+  "source_summary_csv": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/bytes_vs_kld.csv"
+}

@@ -1,0 +1,2 @@
+config,model,benchmark,series,label,mode,K_bar,effective_gb,chunks,metrics_source,mean_kld,median_kld,max_kld,same_top_p_pct,method,log
+dynamic_k6,Qwen3-30B-A3B,kld,dynamic_kbar,K̄=6,dynamic,6,26.427892,10,raw_log,0.010256,0.002584,30.759186,96.414,llama-perplexity --kl-divergence,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/dynamic_k6/data/kld.log

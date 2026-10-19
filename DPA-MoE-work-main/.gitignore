@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv
+.pytest_cache/
+.ruff_cache/
+
+# Models, datasets, codebooks, reference logits and logs (recomputable,
+# tens of GB). Only experiments/results/ is tracked.
+cache/
+logs/
+
+# Local environment and editor/agent state
+.env
+.vscode/
+.agents/
+.claude/
+.codex/

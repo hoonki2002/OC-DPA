@@ -1,0 +1,10 @@
+{
+  "config": "Q5_K_M",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "piqa",
+  "n_total": 1838,
+  "acc_pct": 79.543,
+  "stderr_pct": 0.9412,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q5_K_M/llama_mc/piqa.log"
+}

@@ -1,0 +1,748 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 97249 MiB):
+  Device 0: NVIDIA RTX PRO 6000 Blackwell Server Edition, compute capability 12.0, VMM: yes, VRAM: 97249 MiB
+llama_model_load_from_file_impl: using device CUDA0 (NVIDIA RTX PRO 6000 Blackwell Server Edition) (0000:46:00.0) - 96678 MiB free
+llama_model_loader: loaded meta data with 46 key-value pairs and 363 tensors from /home/jaeyun/workspace/StreamLLM/cache/models/deepseek-moe-16b-chat/baseline/deepseek-moe-16b-chat.Q2_K.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = deepseek
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Deepseek Moe 16b Chat
+llama_model_loader: - kv   3:                           general.finetune str              = chat
+llama_model_loader: - kv   4:                           general.basename str              = deepseek-moe
+llama_model_loader: - kv   5:                         general.size_label str              = 16B
+llama_model_loader: - kv   6:                            general.license str              = other
+llama_model_loader: - kv   7:                       general.license.name str              = deepseek
+llama_model_loader: - kv   8:                       general.license.link str              = https://github.com/deepseek-ai/DeepSe...
+llama_model_loader: - kv   9:                       deepseek.block_count u32              = 28
+llama_model_loader: - kv  10:                    deepseek.context_length u32              = 4096
+llama_model_loader: - kv  11:                  deepseek.embedding_length u32              = 2048
+llama_model_loader: - kv  12:               deepseek.feed_forward_length u32              = 10944
+llama_model_loader: - kv  13:              deepseek.attention.head_count u32              = 16
+llama_model_loader: - kv  14:           deepseek.attention.head_count_kv u32              = 16
+llama_model_loader: - kv  15:                    deepseek.rope.freq_base f32              = 10000.000000
+llama_model_loader: - kv  16:  deepseek.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  17:                 deepseek.expert_used_count u32              = 6
+llama_model_loader: - kv  18:              deepseek.rope.dimension_count u32              = 128
+llama_model_loader: - kv  19:                 deepseek.rope.scaling.type str              = none
+llama_model_loader: - kv  20:         deepseek.leading_dense_block_count u32              = 1
+llama_model_loader: - kv  21:                        deepseek.vocab_size u32              = 102400
+llama_model_loader: - kv  22:        deepseek.expert_feed_forward_length u32              = 1408
+llama_model_loader: - kv  23:              deepseek.expert_weights_scale f32              = 1.000000
+llama_model_loader: - kv  24:                      deepseek.expert_count u32              = 64
+llama_model_loader: - kv  25:               deepseek.expert_shared_count u32              = 2
+llama_model_loader: - kv  26:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  27:                         tokenizer.ggml.pre str              = deepseek-llm
+llama_model_loader: - kv  28:                      tokenizer.ggml.tokens arr[str,102400]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  29:                  tokenizer.ggml.token_type arr[i32,102400]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  30:                      tokenizer.ggml.merges arr[str,99757]   = ["Ġ Ġ", "Ġ t", "Ġ a", "i n", "h e...
+llama_model_loader: - kv  31:                tokenizer.ggml.bos_token_id u32              = 100000
+llama_model_loader: - kv  32:                tokenizer.ggml.eos_token_id u32              = 100001
+llama_model_loader: - kv  33:            tokenizer.ggml.padding_token_id u32              = 100001
+llama_model_loader: - kv  34:               tokenizer.ggml.add_bos_token bool             = true
+llama_model_loader: - kv  35:               tokenizer.ggml.add_eos_token bool             = false
+llama_model_loader: - kv  36:                    tokenizer.chat_template str              = {% if not add_generation_prompt is de...
+llama_model_loader: - kv  37:               general.quantization_version u32              = 2
+llama_model_loader: - kv  38:                          general.file_type u32              = 10
+llama_model_loader: - kv  39:                                general.url str              = https://huggingface.co/mradermacher/d...
+llama_model_loader: - kv  40:              mradermacher.quantize_version str              = 2
+llama_model_loader: - kv  41:                  mradermacher.quantized_by str              = mradermacher
+llama_model_loader: - kv  42:                  mradermacher.quantized_at str              = 2025-02-07T01:11:33+01:00
+llama_model_loader: - kv  43:                  mradermacher.quantized_on str              = marco
+llama_model_loader: - kv  44:                         general.source.url str              = https://huggingface.co/deepseek-ai/de...
+llama_model_loader: - kv  45:                  mradermacher.convert_type str              = hf
+llama_model_loader: - type  f32:   84 tensors
+llama_model_loader: - type q2_K:  167 tensors
+llama_model_loader: - type q3_K:   83 tensors
+llama_model_loader: - type q6_K:    1 tensors
+llama_model_loader: - type iq4_nl:   28 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q2_K - Medium
+print_info: file size   = 6.24 GiB (3.27 BPW) 
+load: 0 unused tokens
+load: printing all EOG tokens:
+load:   - 100001 ('<｜end▁of▁sentence｜>')
+load: special tokens cache size = 15
+load: token to piece cache size = 0.6408 MB
+print_info: arch                  = deepseek
+print_info: vocab_only            = 0
+print_info: no_alloc              = 0
+print_info: n_ctx_train           = 4096
+print_info: n_embd                = 2048
+print_info: n_embd_inp            = 2048
+print_info: n_layer               = 28
+print_info: n_head                = 16
+print_info: n_head_kv             = 16
+print_info: n_rot                 = 128
+print_info: n_swa                 = 0
+print_info: is_swa_any            = 0
+print_info: n_embd_head_k         = 128
+print_info: n_embd_head_v         = 128
+print_info: n_gqa                 = 1
+print_info: n_embd_k_gqa          = 2048
+print_info: n_embd_v_gqa          = 2048
+print_info: f_norm_eps            = 0.0e+00
+print_info: f_norm_rms_eps        = 1.0e-06
+print_info: f_clamp_kqv           = 0.0e+00
+print_info: f_max_alibi_bias      = 0.0e+00
+print_info: f_logit_scale         = 0.0e+00
+print_info: f_attn_scale          = 0.0e+00
+print_info: n_ff                  = 10944
+print_info: n_expert              = 64
+print_info: n_expert_used         = 6
+print_info: n_expert_groups       = 0
+print_info: n_group_used          = 0
+print_info: causal attn           = 1
+print_info: pooling type          = -1
+print_info: rope type             = 0
+print_info: rope scaling          = none
+print_info: freq_base_train       = 10000.0
+print_info: freq_scale_train      = 1
+print_info: n_ctx_orig_yarn       = 4096
+print_info: rope_yarn_log_mul     = 0.0000
+print_info: rope_finetuned        = unknown
+print_info: model type            = 16B
+print_info: model params          = 16.38 B
+print_info: general.name          = Deepseek Moe 16b Chat
+print_info: n_layer_dense_lead    = 1
+print_info: n_ff_exp              = 1408
+print_info: n_expert_shared       = 2
+print_info: expert_weights_scale  = 1.0
+print_info: vocab type            = BPE
+print_info: n_vocab               = 102400
+print_info: n_merges              = 99757
+print_info: BOS token             = 100000 '<｜begin▁of▁sentence｜>'
+print_info: EOS token             = 100001 '<｜end▁of▁sentence｜>'
+print_info: EOT token             = 100001 '<｜end▁of▁sentence｜>'
+print_info: PAD token             = 100001 '<｜end▁of▁sentence｜>'
+print_info: LF token              = 185 'Ċ'
+print_info: EOG token             = 100001 '<｜end▁of▁sentence｜>'
+print_info: max token length      = 256
+load_tensors: loading model tensors, this can take a while... (mmap = true, direct_io = false)
+load_tensors: offloading output layer to GPU
+load_tensors: offloading 27 repeating layers to GPU
+load_tensors: offloaded 29/29 layers to GPU
+load_tensors:   CPU_Mapped model buffer size =    65.62 MiB
+load_tensors:        CUDA0 model buffer size =  6326.58 MiB
+....................................................................................
+common_init_result: added <｜end▁of▁sentence｜> logit bias = -inf
+llama_context: constructing llama_context
+llama_context: n_seq_max     = 8
+llama_context: n_ctx         = 32768
+llama_context: n_ctx_seq     = 32768
+llama_context: n_batch       = 2048
+llama_context: n_ubatch      = 512
+llama_context: causal_attn   = 1
+llama_context: flash_attn    = auto
+llama_context: kv_unified    = true
+llama_context: freq_base     = 10000.0
+llama_context: freq_scale    = 1
+llama_context: n_ctx_seq (32768) > n_ctx_train (4096) -- possible training context overflow
+llama_context:  CUDA_Host  output buffer size =     3.12 MiB
+llama_kv_cache:      CUDA0 KV buffer size =  7168.00 MiB
+llama_kv_cache: size = 7168.00 MiB ( 32768 cells,  28 layers,  8/1 seqs), K (f16): 3584.00 MiB, V (f16): 3584.00 MiB
+llama_kv_cache: attn_rot_k = 0, n_embd_head_k_all = 128
+llama_kv_cache: attn_rot_v = 0, n_embd_head_k_all = 128
+sched_reserve: reserving ...
+sched_reserve: Flash Attention was auto, set to enabled
+sched_reserve: resolving fused Gated Delta Net support:
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =   236.26 MiB
+sched_reserve:  CUDA_Host compute buffer size =    72.01 MiB
+sched_reserve: graph nodes  = 1523
+sched_reserve: graph splits = 2
+sched_reserve: reserve took 45.18 ms, sched copies = 1
+main: model was trained on only 4096 context tokens (32768 specified)
+
+system_info: n_threads = 32 (n_threads_batch = 32) / 32 | CUDA : ARCHS = 1200 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | BLACKWELL_NATIVE_FP4 = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+multiple_choice_score: there are 570 tasks in prompt
+multiple_choice_score: reading tasks..................................................................................................................done
+multiple_choice_score: preparing task data...done
+multiple_choice_score : calculating TruthfulQA score over 570 tasks.
+
+task	acc_norm
+1	100.00000000
+2	100.00000000
+3	66.66666667
+4	50.00000000
+5	60.00000000
+6	66.66666667
+7	71.42857143
+8	75.00000000
+9	77.77777778
+10	70.00000000
+11	72.72727273
+12	75.00000000
+13	76.92307692
+14	78.57142857
+15	73.33333333
+16	68.75000000
+17	70.58823529
+18	72.22222222
+19	73.68421053
+20	70.00000000
+21	66.66666667
+22	68.18181818
+23	65.21739130
+24	66.66666667
+25	68.00000000
+26	69.23076923
+27	66.66666667
+28	67.85714286
+29	68.96551724
+30	70.00000000
+31	67.74193548
+32	65.62500000
+33	63.63636364
+34	64.70588235
+35	62.85714286
+36	63.88888889
+37	64.86486486
+38	63.15789474
+39	64.10256410
+40	65.00000000
+41	65.85365854
+42	66.66666667
+43	67.44186047
+44	65.90909091
+45	64.44444444
+46	65.21739130
+47	65.95744681
+48	66.66666667
+49	67.34693878
+50	68.00000000
+51	66.66666667
+52	65.38461538
+53	64.15094340
+54	62.96296296
+55	63.63636364
+56	64.28571429
+57	64.91228070
+58	63.79310345
+59	64.40677966
+60	65.00000000
+61	65.57377049
+62	64.51612903
+63	65.07936508
+64	65.62500000
+65	66.15384615
+66	65.15151515
+67	65.67164179
+68	64.70588235
+69	63.76811594
+70	64.28571429
+71	63.38028169
+72	63.88888889
+73	63.01369863
+74	62.16216216
+75	61.33333333
+76	61.84210526
+77	62.33766234
+78	62.82051282
+79	63.29113924
+80	62.50000000
+81	62.96296296
+82	63.41463415
+83	63.85542169
+84	64.28571429
+85	63.52941176
+86	62.79069767
+87	62.06896552
+88	61.36363636
+89	60.67415730
+90	61.11111111
+91	60.43956044
+92	60.86956522
+93	61.29032258
+94	61.70212766
+95	62.10526316
+96	62.50000000
+97	61.85567010
+98	62.24489796
+99	61.61616162
+100	62.00000000
+101	62.37623762
+102	62.74509804
+103	63.10679612
+104	62.50000000
+105	61.90476190
+106	62.26415094
+107	62.61682243
+108	62.96296296
+109	63.30275229
+110	63.63636364
+111	63.06306306
+112	62.50000000
+113	62.83185841
+114	62.28070175
+115	62.60869565
+116	62.93103448
+117	63.24786325
+118	62.71186441
+119	63.02521008
+120	62.50000000
+121	62.80991736
+122	63.11475410
+123	63.41463415
+124	62.90322581
+125	63.20000000
+126	63.49206349
+127	63.77952756
+128	64.06250000
+129	63.56589147
+130	63.84615385
+131	64.12213740
+132	64.39393939
+133	64.66165414
+134	64.92537313
+135	65.18518519
+136	65.44117647
+137	64.96350365
+138	65.21739130
+139	65.46762590
+140	65.71428571
+141	65.24822695
+142	65.49295775
+143	65.73426573
+144	65.97222222
+145	65.51724138
+146	65.75342466
+147	65.98639456
+148	66.21621622
+149	66.44295302
+150	66.00000000
+151	66.22516556
+152	65.78947368
+153	66.01307190
+154	66.23376623
+155	65.80645161
+156	66.02564103
+157	66.24203822
+158	65.82278481
+159	66.03773585
+160	66.25000000
+161	66.45962733
+162	66.66666667
+163	66.87116564
+164	67.07317073
+165	67.27272727
+166	67.46987952
+167	67.66467066
+168	67.85714286
+169	68.04733728
+170	67.64705882
+171	67.83625731
+172	68.02325581
+173	67.63005780
+174	67.81609195
+175	67.42857143
+176	67.61363636
+177	67.79661017
+178	67.41573034
+179	67.59776536
+180	67.77777778
+181	67.40331492
+182	67.03296703
+183	66.66666667
+184	66.84782609
+185	67.02702703
+186	67.20430108
+187	67.37967914
+188	67.55319149
+189	67.72486772
+190	67.89473684
+191	68.06282723
+192	67.70833333
+193	67.35751295
+194	67.52577320
+195	67.69230769
+196	67.34693878
+197	67.51269036
+198	67.17171717
+199	67.33668342
+200	67.50000000
+201	67.66169154
+202	67.82178218
+203	67.98029557
+204	68.13725490
+205	68.29268293
+206	68.44660194
+207	68.11594203
+208	67.78846154
+209	67.94258373
+210	68.09523810
+211	67.77251185
+212	67.45283019
+213	67.60563380
+214	67.28971963
+215	66.97674419
+216	66.66666667
+217	66.35944700
+218	66.05504587
+219	65.75342466
+220	65.45454545
+221	65.61085973
+222	65.76576577
+223	65.91928251
+224	66.07142857
+225	66.22222222
+226	66.37168142
+227	66.07929515
+228	66.22807018
+229	65.93886463
+230	66.08695652
+231	66.23376623
+232	65.94827586
+233	66.09442060
+234	66.23931624
+235	66.38297872
+236	66.52542373
+237	66.66666667
+238	66.38655462
+239	66.10878661
+240	66.25000000
+241	65.97510373
+242	66.11570248
+243	66.25514403
+244	66.39344262
+245	66.12244898
+246	65.85365854
+247	65.58704453
+248	65.32258065
+249	65.46184739
+250	65.60000000
+251	65.73705179
+252	65.87301587
+253	65.61264822
+254	65.74803150
+255	65.88235294
+256	66.01562500
+257	66.14785992
+258	65.89147287
+259	66.02316602
+260	66.15384615
+261	65.90038314
+262	66.03053435
+263	66.15969582
+264	66.28787879
+265	66.03773585
+266	66.16541353
+267	65.91760300
+268	65.67164179
+269	65.79925651
+270	65.92592593
+271	66.05166052
+272	65.80882353
+273	65.56776557
+274	65.32846715
+275	65.45454545
+276	65.21739130
+277	65.34296029
+278	65.10791367
+279	64.87455197
+280	64.64285714
+281	64.76868327
+282	64.53900709
+283	64.66431095
+284	64.78873239
+285	64.91228070
+286	64.68531469
+287	64.80836237
+288	64.93055556
+289	65.05190311
+290	65.17241379
+291	64.94845361
+292	65.06849315
+293	64.84641638
+294	64.96598639
+295	64.74576271
+296	64.86486486
+297	64.98316498
+298	65.10067114
+299	65.21739130
+300	65.33333333
+301	65.44850498
+302	65.56291391
+303	65.67656766
+304	65.78947368
+305	65.57377049
+306	65.68627451
+307	65.79804560
+308	65.58441558
+309	65.69579288
+310	65.80645161
+311	65.91639871
+312	66.02564103
+313	65.81469649
+314	65.92356688
+315	66.03174603
+316	66.13924051
+317	65.93059937
+318	66.03773585
+319	66.14420063
+320	66.25000000
+321	66.35514019
+322	66.45962733
+323	66.56346749
+324	66.66666667
+325	66.46153846
+326	66.56441718
+327	66.66666667
+328	66.76829268
+329	66.86930091
+330	66.96969697
+331	67.06948640
+332	67.16867470
+333	66.96696697
+334	67.06586826
+335	67.16417910
+336	67.26190476
+337	67.35905045
+338	67.15976331
+339	67.25663717
+340	67.35294118
+341	67.44868035
+342	67.54385965
+343	67.63848397
+344	67.73255814
+345	67.53623188
+346	67.63005780
+347	67.72334294
+348	67.81609195
+349	67.90830946
+350	67.71428571
+351	67.52136752
+352	67.32954545
+353	67.42209632
+354	67.51412429
+355	67.60563380
+356	67.69662921
+357	67.50700280
+358	67.31843575
+359	67.40947075
+360	67.22222222
+361	67.31301939
+362	67.40331492
+363	67.49311295
+364	67.30769231
+365	67.12328767
+366	66.93989071
+367	67.02997275
+368	67.11956522
+369	67.20867209
+370	67.29729730
+371	67.38544474
+372	67.47311828
+373	67.56032172
+374	67.37967914
+375	67.20000000
+376	67.28723404
+377	67.37400531
+378	67.19576720
+379	67.01846966
+380	67.10526316
+381	67.19160105
+382	67.01570681
+383	66.84073107
+384	66.92708333
+385	67.01298701
+386	66.83937824
+387	66.92506460
+388	67.01030928
+389	67.09511568
+390	67.17948718
+391	67.26342711
+392	67.34693878
+393	67.43002545
+394	67.51269036
+395	67.34177215
+396	67.42424242
+397	67.25440806
+398	67.33668342
+399	67.16791980
+400	67.25000000
+401	67.33167082
+402	67.41293532
+403	67.49379653
+404	67.32673267
+405	67.40740741
+406	67.24137931
+407	67.32186732
+408	67.40196078
+409	67.48166259
+410	67.31707317
+411	67.39659367
+412	67.47572816
+413	67.55447942
+414	67.63285024
+415	67.71084337
+416	67.78846154
+417	67.86570743
+418	67.94258373
+419	68.01909308
+420	67.85714286
+421	67.69596200
+422	67.53554502
+423	67.61229314
+424	67.68867925
+425	67.76470588
+426	67.60563380
+427	67.68149883
+428	67.75700935
+429	67.83216783
+430	67.67441860
+431	67.74941995
+432	67.82407407
+433	67.89838337
+434	67.97235023
+435	67.81609195
+436	67.66055046
+437	67.73455378
+438	67.80821918
+439	67.88154897
+440	67.95454545
+441	68.02721088
+442	68.09954751
+443	68.17155756
+444	68.24324324
+445	68.31460674
+446	68.38565022
+447	68.23266219
+448	68.30357143
+449	68.37416481
+450	68.22222222
+451	68.29268293
+452	68.36283186
+453	68.43267108
+454	68.28193833
+455	68.13186813
+456	68.20175439
+457	68.27133479
+458	68.12227074
+459	68.19172113
+460	68.26086957
+461	68.32971800
+462	68.39826840
+463	68.25053996
+464	68.10344828
+465	68.17204301
+466	68.24034335
+467	68.30835118
+468	68.37606838
+469	68.44349680
+470	68.29787234
+471	68.15286624
+472	68.22033898
+473	68.28752643
+474	68.14345992
+475	68.00000000
+476	67.85714286
+477	67.92452830
+478	67.99163180
+479	68.05845511
+480	68.12500000
+481	67.98336798
+482	68.04979253
+483	67.90890269
+484	67.97520661
+485	68.04123711
+486	67.90123457
+487	67.96714579
+488	68.03278689
+489	68.09815951
+490	68.16326531
+491	68.22810591
+492	68.29268293
+493	68.35699797
+494	68.42105263
+495	68.28282828
+496	68.34677419
+497	68.41046278
+498	68.47389558
+499	68.53707415
+500	68.40000000
+501	68.26347305
+502	68.32669323
+503	68.19085487
+504	68.25396825
+505	68.31683168
+506	68.37944664
+507	68.24457594
+508	68.30708661
+509	68.36935167
+510	68.23529412
+511	68.29745597
+512	68.35937500
+513	68.42105263
+514	68.48249027
+515	68.54368932
+516	68.41085271
+517	68.47195358
+518	68.53281853
+519	68.40077071
+520	68.46153846
+521	68.52207294
+522	68.58237548
+523	68.64244742
+524	68.70229008
+525	68.57142857
+526	68.44106464
+527	68.31119545
+528	68.37121212
+529	68.43100189
+530	68.49056604
+531	68.54990584
+532	68.60902256
+533	68.66791745
+534	68.72659176
+535	68.78504673
+536	68.65671642
+537	68.71508380
+538	68.77323420
+539	68.83116883
+540	68.88888889
+541	68.76155268
+542	68.81918819
+543	68.87661142
+544	68.93382353
+545	68.80733945
+546	68.86446886
+547	68.92138940
+548	68.97810219
+549	69.03460838
+550	69.09090909
+551	69.14700544
+552	69.02173913
+553	69.07775769
+554	68.95306859
+555	68.82882883
+556	68.88489209
+557	68.94075404
+558	68.99641577
+559	69.05187835
+560	69.10714286
+561	68.98395722
+562	68.86120996
+563	68.73889876
+564	68.79432624
+565	68.84955752
+566	68.72791519
+567	68.60670194
+568	68.66197183
+569	68.54130053
+570	68.59649123
+
+Final result: 68.5965 +/- 1.9457
+Random chance: 24.9890 +/- 1.8150
+
+
+llama_perf_context_print:        load time =    8381.72 ms
+llama_perf_context_print: prompt eval time =    7384.79 ms / 25834 tokens (    0.29 ms per token,  3498.27 tokens per second)
+llama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)
+llama_perf_context_print:       total time =   20038.04 ms / 25835 tokens
+llama_perf_context_print:    graphs reused =          0
+common_memory_breakdown_print: | memory breakdown [MiB]                            | total    free     self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (RTX PRO 6000 Blackwell Server Edition) | 97249 = 82848 + (13730 =  6326 +    7168 +     236) +         670 |
+common_memory_breakdown_print: |   - Host                                          |                    137 =    65 +       0 +      72                |
+streamllm-ext routing: sentinel_claims=0 forward_moe_layer_calls=0
+streamllm-ext correctness: required_set_misses=0 comp_execute=0 kernel_launch=0 n_chunks_oob=0
+streamllm-ext eviction: total=0 during_dispatch=0

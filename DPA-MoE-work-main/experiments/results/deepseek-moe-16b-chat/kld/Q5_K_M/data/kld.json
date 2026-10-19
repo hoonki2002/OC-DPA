@@ -1,0 +1,18 @@
+{
+  "K_bar": "",
+  "benchmark": "kld",
+  "chunks": 10,
+  "config": "Q5_K_M",
+  "effective_gb": "12.385595392",
+  "label": "Q5_K_M",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/kld/Q5_K_M/data/kld.log",
+  "max_kld": 1.93694,
+  "mean_kld": 0.016697,
+  "median_kld": 0.007935,
+  "method": "llama-perplexity --kl-divergence",
+  "metrics_source": "raw_log",
+  "mode": "baseline",
+  "model": "deepseek-moe-16b-chat",
+  "same_top_p_pct": 94.143,
+  "series": "baseline"
+}

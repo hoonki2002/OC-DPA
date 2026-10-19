@@ -1,0 +1,18 @@
+{
+  "K_bar": "2",
+  "benchmark": "kld",
+  "chunks": 10,
+  "config": "dynamic_k2",
+  "effective_gb": "10.120438048",
+  "label": "K\u0304=2",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/dynamic_k2/data/kld.log",
+  "max_kld": 25.25115,
+  "mean_kld": 0.310157,
+  "median_kld": 0.145792,
+  "method": "llama-perplexity --kl-divergence",
+  "metrics_source": "raw_log",
+  "mode": "dynamic",
+  "model": "Qwen3-30B-A3B",
+  "same_top_p_pct": 78.017,
+  "series": "dynamic_kbar"
+}

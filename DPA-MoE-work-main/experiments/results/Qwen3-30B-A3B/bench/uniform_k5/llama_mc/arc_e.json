@@ -1,0 +1,11 @@
+{
+  "config": "uniform_k5",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "arc_e",
+  "n_total": 570,
+  "n_parallel": 8,
+  "acc_pct": 75.614,
+  "stderr_pct": 1.8002,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/uniform_k5/llama_mc/arc_e.log"
+}

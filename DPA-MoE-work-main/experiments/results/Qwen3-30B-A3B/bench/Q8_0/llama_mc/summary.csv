@@ -1,0 +1,5 @@
+config,benchmark,n_total,n_parallel,acc_pct,stderr_pct,method,log
+Q8_0,arc_c,1172,,54.9488,1.454,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/arc_c.log
+Q8_0,arc_e,570,8,77.193,1.759,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/arc_e.log
+Q8_0,winogrande,1267,8,62.6677,1.3594,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/winogrande.log
+Q8_0,hellaswag,10042,8,71.6092,0.45,llama-perplexity --multiple-choice,/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/hellaswag.log

@@ -1,0 +1,2 @@
+config,model,benchmark,series,label,mode,K_bar,effective_gb,chunks,metrics_source,mean_kld,median_kld,max_kld,same_top_p_pct,method,log
+uniform_k7,deepseek-moe-16b-chat,kld,uniform,K=7,uniform,7.0000,16.876650658,10,raw_log,0.011891,0.004761,1.748287,95.198,llama-perplexity --kl-divergence,/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/kld/uniform_k7/data/kld.log

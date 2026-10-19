@@ -1,0 +1,4 @@
+[submodule "third_party/llama.cpp"]
+	path = third_party/llama.cpp
+	url = https://github.com/kimGreg/DPA-MoE-llama.cpp-work.git
+	branch = dpa-moe

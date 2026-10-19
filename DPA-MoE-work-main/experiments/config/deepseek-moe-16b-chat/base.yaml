@@ -1,0 +1,81 @@
+# DeepSeekMoE-16B-Chat DPA-MoE experiment config.
+#
+# Same schema as Qwen3:
+#   encode    - AnyBCQ codebook calibration and GGUF materialization
+#   profile   - dynamic precision profile generation
+#
+# Benchmark settings live under experiments/config/deepseek-moe-16b-chat/.
+
+code_sha: 3b77fa7
+seed: 0
+
+model:
+  key: deepseek_moe
+  family: deepseek-moe-16b-chat
+  adapter: deepseek_moe
+  n_layers: 28
+  hf:
+    repo: deepseek-ai/deepseek-moe-16b-chat
+    revision: eefd8ac7
+    local_dir: cache/models/deepseek-moe-16b-chat/hf
+    size_gb: 32
+  bf16_gguf: cache/models/deepseek-moe-16b-chat/baseline/deepseek-moe-16b-chat-BF16.gguf
+  baseline_gguf:
+    repo: mradermacher/deepseek-moe-16b-chat-GGUF
+    revision: fe95deab
+    local_dir: cache/models/deepseek-moe-16b-chat/baseline
+    quants: [Q2_K, Q5_K_M, Q8_0]
+  codebooks:
+    ss_anybcq: cache/models/deepseek-moe-16b-chat/ss_anybcq_layer
+    anybcq: cache/models/deepseek-moe-16b-chat/anybcq_layer
+  ggufs:
+    ss_anybcq: cache/models/deepseek-moe-16b-chat/chunked/ss_anybcq.gguf
+    anybcq: cache/models/deepseek-moe-16b-chat/chunked/anybcq.gguf
+
+hardware:
+  gpu_pin: 7
+  gpu_model: NVIDIA RTX PRO 6000 Blackwell Server Edition
+  gpu_vram_gib: 96
+  ram_gib: 1228
+
+encode:
+  variant: ss_anybcq
+  gpus: [2,3,4,5,6]
+  inner_bs: 2
+  fp_caching: true
+  calibration:
+    files:
+      - cache/datasets/calibration_v3.txt
+      - cache/datasets/calibration_v5.txt
+      - cache/datasets/wikitext-2-raw-train.txt
+    sha256:
+      - 200e109bcd2b599fabcceaada7f52bbd1e7c8f9ae030b8dc59c011de039a8026
+      - 2a0118c633250aad448cfc2d103e10a731af6974dab1738ca19261fce3587b80
+      - c58d555a94ada0882d1e8c0b3dc7ba68e1c269da5ad9e7a057300245d130c4e8
+  hyperparams:
+    base_precision: 2
+    target_precision: 8
+    group_size: 128
+    iters: 20
+    num_samples: 512
+    batch_size: 2
+    seq_len: 2048
+    w_lr1: 1.0e-4
+    w_lr2: 1.0e-4
+    w_lr3: 1.0e-4
+    asymmetric: true
+    train_beta: true        # anybcq variant only; ss_anybcq keeps beta fixed after its least-squares init
+    any_precision_alpha: false
+    recon_dtype: float32
+
+profile:
+  encoding: ss_anybcq
+  gpu: [7]
+  seed: 0
+  residuals_npz: cache/experiment/deepseek_ss_anybcq/layout_solver/expert_residuals.npz
+  runtime_bin: cache/experiment/deepseek-moe-16b-chat/3_dynamic_precision/bin/expert_residuals.bin
+  corpus:
+    - cache/datasets/wikitext-2-raw-train.txt
+  max_tokens: 16384
+  max_per_expert: 256
+  seq_len: 2048

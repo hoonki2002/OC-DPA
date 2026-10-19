@@ -1,0 +1,18 @@
+{
+  "K_bar": "7",
+  "benchmark": "kld",
+  "chunks": 10,
+  "config": "dynamic_k7",
+  "effective_gb": "16.876650658",
+  "label": "K\u0304=7",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/deepseek-moe-16b-chat/kld/dynamic_k7/data/kld.log",
+  "max_kld": 1.288887,
+  "mean_kld": 0.005601,
+  "median_kld": 0.002355,
+  "method": "llama-perplexity --kl-divergence",
+  "metrics_source": "raw_log",
+  "mode": "dynamic",
+  "model": "deepseek-moe-16b-chat",
+  "same_top_p_pct": 96.629,
+  "series": "dynamic_kbar"
+}

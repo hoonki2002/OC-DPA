@@ -1,0 +1,18 @@
+{
+  "K_bar": "7.0000",
+  "benchmark": "kld",
+  "chunks": 10,
+  "config": "uniform_k7",
+  "effective_gb": "30.504755488",
+  "label": "K=7",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/kld/uniform_k7/data/kld.log",
+  "max_kld": 28.176321,
+  "mean_kld": 0.0082,
+  "median_kld": 0.00218,
+  "method": "llama-perplexity --kl-divergence",
+  "metrics_source": "raw_log",
+  "mode": "uniform",
+  "model": "Qwen3-30B-A3B",
+  "same_top_p_pct": 96.756,
+  "series": "uniform"
+}

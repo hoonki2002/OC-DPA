@@ -1,0 +1,28 @@
+# Qwen3 Wikitext PPL/KLD quantization-quality config.
+model:
+  key: qwen3_moe
+  family: Qwen3-30B-A3B
+benchmark:
+  gpu: [0, 1]
+  fast_mode: true
+  config:
+    baseline: [Q2_K, Q5_K_M, Q8_0]
+    uniform_k: [2, 3, 4, 5, 6, 7, 8]
+    dynamic_k: [2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7]
+  dynamic_profile_file: cache/experiment/Qwen3-30B-A3B/3_dynamic_precision/bin/expert_residuals_wikitext_monotonic.bin
+  vram_cap_mb: 40000
+  full_pin_vram_cap_mb: 40000
+  allow_capture: true
+  pin_all: true
+  seed: 0
+  wikitext_ppl:
+    dataset: cache/datasets/wikitext-2-raw-test.txt
+    sha256: bbf94c53a05abe9ee670d3b6343608095822c85e26de37c70b24fc571964574a
+    dynamic_profile_file: cache/experiment/Qwen3-30B-A3B/3_dynamic_precision/bin/expert_residuals_wikitext_monotonic.bin
+    ctx_size: 4096
+    chunks: 10
+    batch_size: 1
+    ubatch_size: 1
+    seed: 0
+  kld_sweep:
+    vram_cap_mb: 40000

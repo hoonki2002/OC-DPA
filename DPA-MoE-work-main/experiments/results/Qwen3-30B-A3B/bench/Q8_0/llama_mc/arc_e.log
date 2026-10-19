@@ -1,0 +1,752 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 97249 MiB):
+  Device 0: NVIDIA RTX PRO 6000 Blackwell Server Edition, compute capability 12.0, VMM: yes, VRAM: 97249 MiB
+llama_model_load_from_file_impl: using device CUDA0 (NVIDIA RTX PRO 6000 Blackwell Server Edition) (0000:4e:00.0) - 54342 MiB free
+llama_model_loader: loaded meta data with 35 key-value pairs and 579 tensors from /home/jaeyun/workspace/StreamLLM/cache/models/Qwen3-30B-A3B/baseline/Qwen3-30B-A3B-Q8_0.gguf (version GGUF V3 (latest))
+llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
+llama_model_loader: - kv   0:                       general.architecture str              = qwen3moe
+llama_model_loader: - kv   1:                               general.type str              = model
+llama_model_loader: - kv   2:                               general.name str              = Qwen3-30B-A3B
+llama_model_loader: - kv   3:                           general.basename str              = Qwen3-30B-A3B
+llama_model_loader: - kv   4:                       general.quantized_by str              = Unsloth
+llama_model_loader: - kv   5:                         general.size_label str              = 30B-A3B
+llama_model_loader: - kv   6:                           general.repo_url str              = https://huggingface.co/unsloth
+llama_model_loader: - kv   7:                       qwen3moe.block_count u32              = 48
+llama_model_loader: - kv   8:                    qwen3moe.context_length u32              = 40960
+llama_model_loader: - kv   9:                  qwen3moe.embedding_length u32              = 2048
+llama_model_loader: - kv  10:               qwen3moe.feed_forward_length u32              = 6144
+llama_model_loader: - kv  11:              qwen3moe.attention.head_count u32              = 32
+llama_model_loader: - kv  12:           qwen3moe.attention.head_count_kv u32              = 4
+llama_model_loader: - kv  13:                    qwen3moe.rope.freq_base f32              = 1000000.000000
+llama_model_loader: - kv  14:  qwen3moe.attention.layer_norm_rms_epsilon f32              = 0.000001
+llama_model_loader: - kv  15:                 qwen3moe.expert_used_count u32              = 8
+llama_model_loader: - kv  16:              qwen3moe.attention.key_length u32              = 128
+llama_model_loader: - kv  17:            qwen3moe.attention.value_length u32              = 128
+llama_model_loader: - kv  18:                      qwen3moe.expert_count u32              = 128
+llama_model_loader: - kv  19:        qwen3moe.expert_feed_forward_length u32              = 768
+llama_model_loader: - kv  20:                       tokenizer.ggml.model str              = gpt2
+llama_model_loader: - kv  21:                         tokenizer.ggml.pre str              = qwen2
+llama_model_loader: - kv  22:                      tokenizer.ggml.tokens arr[str,151936]  = ["!", "\"", "#", "$", "%", "&", "'", ...
+llama_model_loader: - kv  23:                  tokenizer.ggml.token_type arr[i32,151936]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+llama_model_loader: - kv  24:                      tokenizer.ggml.merges arr[str,151387]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
+llama_model_loader: - kv  25:                tokenizer.ggml.eos_token_id u32              = 151645
+llama_model_loader: - kv  26:            tokenizer.ggml.padding_token_id u32              = 151654
+llama_model_loader: - kv  27:               tokenizer.ggml.add_bos_token bool             = false
+llama_model_loader: - kv  28:                    tokenizer.chat_template str              = {%- if tools %}\n    {{- '<|im_start|>...
+llama_model_loader: - kv  29:               general.quantization_version u32              = 2
+llama_model_loader: - kv  30:                          general.file_type u32              = 7
+llama_model_loader: - kv  31:                      quantize.imatrix.file str              = Qwen3-30B-A3B-GGUF/imatrix_unsloth.dat
+llama_model_loader: - kv  32:                   quantize.imatrix.dataset str              = unsloth_calibration_Qwen3-30B-A3B.txt
+llama_model_loader: - kv  33:             quantize.imatrix.entries_count i32              = 384
+llama_model_loader: - kv  34:              quantize.imatrix.chunks_count i32              = 685
+llama_model_loader: - type  f32:  241 tensors
+llama_model_loader: - type q8_0:  338 tensors
+print_info: file format = GGUF V3 (latest)
+print_info: file type   = Q8_0
+print_info: file size   = 30.25 GiB (8.51 BPW) 
+load: 0 unused tokens
+load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+load: printing all EOG tokens:
+load:   - 128247 ('</s>')
+load:   - 151643 ('<|endoftext|>')
+load:   - 151645 ('<|im_end|>')
+load:   - 151662 ('<|fim_pad|>')
+load:   - 151663 ('<|repo_name|>')
+load:   - 151664 ('<|file_sep|>')
+load: special tokens cache size = 27
+load: token to piece cache size = 0.9311 MB
+print_info: arch                  = qwen3moe
+print_info: vocab_only            = 0
+print_info: no_alloc              = 0
+print_info: n_ctx_train           = 40960
+print_info: n_embd                = 2048
+print_info: n_embd_inp            = 2048
+print_info: n_layer               = 48
+print_info: n_head                = 32
+print_info: n_head_kv             = 4
+print_info: n_rot                 = 128
+print_info: n_swa                 = 0
+print_info: is_swa_any            = 0
+print_info: n_embd_head_k         = 128
+print_info: n_embd_head_v         = 128
+print_info: n_gqa                 = 8
+print_info: n_embd_k_gqa          = 512
+print_info: n_embd_v_gqa          = 512
+print_info: f_norm_eps            = 0.0e+00
+print_info: f_norm_rms_eps        = 1.0e-06
+print_info: f_clamp_kqv           = 0.0e+00
+print_info: f_max_alibi_bias      = 0.0e+00
+print_info: f_logit_scale         = 0.0e+00
+print_info: f_attn_scale          = 0.0e+00
+print_info: n_ff                  = 6144
+print_info: n_expert              = 128
+print_info: n_expert_used         = 8
+print_info: n_expert_groups       = 0
+print_info: n_group_used          = 0
+print_info: causal attn           = 1
+print_info: pooling type          = -1
+print_info: rope type             = 2
+print_info: rope scaling          = linear
+print_info: freq_base_train       = 1000000.0
+print_info: freq_scale_train      = 1
+print_info: n_ctx_orig_yarn       = 40960
+print_info: rope_yarn_log_mul     = 0.0000
+print_info: rope_finetuned        = unknown
+print_info: model type            = 30B.A3B
+print_info: model params          = 30.53 B
+print_info: general.name          = Qwen3-30B-A3B
+print_info: n_ff_exp              = 768
+print_info: vocab type            = BPE
+print_info: n_vocab               = 151936
+print_info: n_merges              = 151387
+print_info: BOS token             = 11 ','
+print_info: EOS token             = 151645 '<|im_end|>'
+print_info: EOT token             = 151645 '<|im_end|>'
+print_info: PAD token             = 151654 '<|vision_pad|>'
+print_info: LF token              = 198 'Ċ'
+print_info: FIM PRE token         = 151659 '<|fim_prefix|>'
+print_info: FIM SUF token         = 151661 '<|fim_suffix|>'
+print_info: FIM MID token         = 151660 '<|fim_middle|>'
+print_info: FIM PAD token         = 151662 '<|fim_pad|>'
+print_info: FIM REP token         = 151663 '<|repo_name|>'
+print_info: FIM SEP token         = 151664 '<|file_sep|>'
+print_info: EOG token             = 128247 '</s>'
+print_info: EOG token             = 151643 '<|endoftext|>'
+print_info: EOG token             = 151645 '<|im_end|>'
+print_info: EOG token             = 151662 '<|fim_pad|>'
+print_info: EOG token             = 151663 '<|repo_name|>'
+print_info: EOG token             = 151664 '<|file_sep|>'
+print_info: max token length      = 256
+load_tensors: loading model tensors, this can take a while... (mmap = true, direct_io = false)
+load_tensors: offloading output layer to GPU
+load_tensors: offloading 47 repeating layers to GPU
+load_tensors: offloaded 49/49 layers to GPU
+load_tensors:   CPU_Mapped model buffer size =   315.30 MiB
+load_tensors:        CUDA0 model buffer size = 30658.12 MiB
+....................................................................................................
+common_init_result: added </s> logit bias = -inf
+common_init_result: added <|endoftext|> logit bias = -inf
+common_init_result: added <|im_end|> logit bias = -inf
+common_init_result: added <|fim_pad|> logit bias = -inf
+common_init_result: added <|repo_name|> logit bias = -inf
+common_init_result: added <|file_sep|> logit bias = -inf
+llama_context: constructing llama_context
+llama_context: n_seq_max     = 8
+llama_context: n_ctx         = 32768
+llama_context: n_ctx_seq     = 32768
+llama_context: n_batch       = 2048
+llama_context: n_ubatch      = 512
+llama_context: causal_attn   = 1
+llama_context: flash_attn    = auto
+llama_context: kv_unified    = true
+llama_context: freq_base     = 1000000.0
+llama_context: freq_scale    = 1
+llama_context: n_ctx_seq (32768) < n_ctx_train (40960) -- the full capacity of the model will not be utilized
+llama_context:  CUDA_Host  output buffer size =     4.64 MiB
+llama_kv_cache:      CUDA0 KV buffer size =  3072.00 MiB
+llama_kv_cache: size = 3072.00 MiB ( 32768 cells,  48 layers,  8/1 seqs), K (f16): 1536.00 MiB, V (f16): 1536.00 MiB
+llama_kv_cache: attn_rot_k = 0, n_embd_head_k_all = 128
+llama_kv_cache: attn_rot_v = 0, n_embd_head_k_all = 128
+sched_reserve: reserving ...
+sched_reserve: Flash Attention was auto, set to enabled
+sched_reserve: resolving fused Gated Delta Net support:
+sched_reserve: fused Gated Delta Net (autoregressive) enabled
+sched_reserve: fused Gated Delta Net (chunked) enabled
+sched_reserve:      CUDA0 compute buffer size =   300.75 MiB
+sched_reserve:  CUDA_Host compute buffer size =    72.01 MiB
+sched_reserve: graph nodes  = 3031
+sched_reserve: graph splits = 2
+sched_reserve: reserve took 47.88 ms, sched copies = 1
+
+system_info: n_threads = 32 (n_threads_batch = 32) / 32 | CUDA : ARCHS = 1200 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | BLACKWELL_NATIVE_FP4 = 1 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+multiple_choice_score: there are 570 tasks in prompt
+multiple_choice_score: reading tasks..................................................................................................................done
+multiple_choice_score: preparing task data...done
+multiple_choice_score : calculating TruthfulQA score over 570 tasks.
+
+task	acc_norm
+1	100.00000000
+2	100.00000000
+3	100.00000000
+4	100.00000000
+5	100.00000000
+6	100.00000000
+7	85.71428571
+8	87.50000000
+9	88.88888889
+10	80.00000000
+11	81.81818182
+12	83.33333333
+13	84.61538462
+14	78.57142857
+15	73.33333333
+16	68.75000000
+17	70.58823529
+18	72.22222222
+19	73.68421053
+20	75.00000000
+21	76.19047619
+22	77.27272727
+23	78.26086957
+24	79.16666667
+25	80.00000000
+26	80.76923077
+27	81.48148148
+28	82.14285714
+29	82.75862069
+30	83.33333333
+31	80.64516129
+32	78.12500000
+33	75.75757576
+34	76.47058824
+35	77.14285714
+36	77.77777778
+37	78.37837838
+38	76.31578947
+39	76.92307692
+40	77.50000000
+41	78.04878049
+42	78.57142857
+43	79.06976744
+44	79.54545455
+45	80.00000000
+46	80.43478261
+47	78.72340426
+48	79.16666667
+49	79.59183673
+50	80.00000000
+51	80.39215686
+52	80.76923077
+53	79.24528302
+54	79.62962963
+55	80.00000000
+56	80.35714286
+57	80.70175439
+58	79.31034483
+59	79.66101695
+60	80.00000000
+61	80.32786885
+62	80.64516129
+63	80.95238095
+64	81.25000000
+65	81.53846154
+66	80.30303030
+67	80.59701493
+68	79.41176471
+69	78.26086957
+70	78.57142857
+71	78.87323944
+72	79.16666667
+73	79.45205479
+74	78.37837838
+75	77.33333333
+76	77.63157895
+77	77.92207792
+78	76.92307692
+79	77.21518987
+80	76.25000000
+81	76.54320988
+82	75.60975610
+83	75.90361446
+84	76.19047619
+85	76.47058824
+86	76.74418605
+87	77.01149425
+88	76.13636364
+89	75.28089888
+90	74.44444444
+91	73.62637363
+92	73.91304348
+93	73.11827957
+94	73.40425532
+95	73.68421053
+96	73.95833333
+97	74.22680412
+98	74.48979592
+99	73.73737374
+100	74.00000000
+101	74.25742574
+102	74.50980392
+103	74.75728155
+104	75.00000000
+105	75.23809524
+106	75.47169811
+107	75.70093458
+108	75.92592593
+109	76.14678899
+110	76.36363636
+111	76.57657658
+112	76.78571429
+113	76.10619469
+114	75.43859649
+115	75.65217391
+116	75.86206897
+117	76.06837607
+118	76.27118644
+119	76.47058824
+120	76.66666667
+121	76.85950413
+122	77.04918033
+123	77.23577236
+124	76.61290323
+125	76.80000000
+126	76.98412698
+127	76.37795276
+128	76.56250000
+129	76.74418605
+130	76.92307692
+131	77.09923664
+132	77.27272727
+133	77.44360902
+134	76.86567164
+135	77.03703704
+136	77.20588235
+137	76.64233577
+138	76.81159420
+139	76.97841727
+140	77.14285714
+141	76.59574468
+142	76.76056338
+143	76.92307692
+144	77.08333333
+145	77.24137931
+146	77.39726027
+147	77.55102041
+148	77.70270270
+149	77.85234899
+150	77.33333333
+151	77.48344371
+152	77.63157895
+153	77.77777778
+154	77.92207792
+155	78.06451613
+156	78.20512821
+157	77.70700637
+158	77.21518987
+159	77.35849057
+160	77.50000000
+161	77.63975155
+162	77.16049383
+163	77.30061350
+164	77.43902439
+165	77.57575758
+166	77.71084337
+167	77.24550898
+168	77.38095238
+169	77.51479290
+170	77.64705882
+171	77.19298246
+172	77.32558140
+173	76.87861272
+174	77.01149425
+175	77.14285714
+176	77.27272727
+177	77.40112994
+178	77.52808989
+179	77.65363128
+180	77.77777778
+181	77.90055249
+182	78.02197802
+183	78.14207650
+184	78.26086957
+185	78.37837838
+186	78.49462366
+187	78.60962567
+188	78.72340426
+189	78.83597884
+190	78.42105263
+191	78.53403141
+192	78.12500000
+193	78.23834197
+194	78.35051546
+195	78.46153846
+196	78.57142857
+197	78.17258883
+198	78.28282828
+199	77.88944724
+200	78.00000000
+201	78.10945274
+202	78.21782178
+203	78.32512315
+204	77.94117647
+205	78.04878049
+206	78.15533981
+207	77.77777778
+208	77.40384615
+209	77.51196172
+210	77.61904762
+211	77.72511848
+212	77.83018868
+213	77.93427230
+214	78.03738318
+215	77.67441860
+216	77.77777778
+217	77.41935484
+218	77.06422018
+219	77.16894977
+220	77.27272727
+221	76.92307692
+222	77.02702703
+223	77.13004484
+224	77.23214286
+225	77.33333333
+226	77.43362832
+227	77.53303965
+228	77.63157895
+229	77.72925764
+230	77.82608696
+231	77.92207792
+232	77.58620690
+233	77.68240343
+234	77.77777778
+235	77.87234043
+236	77.96610169
+237	78.05907173
+238	77.73109244
+239	77.40585774
+240	77.50000000
+241	77.59336100
+242	77.68595041
+243	77.36625514
+244	77.45901639
+245	77.55102041
+246	77.23577236
+247	77.32793522
+248	77.01612903
+249	77.10843373
+250	77.20000000
+251	76.89243028
+252	76.98412698
+253	76.67984190
+254	76.77165354
+255	76.86274510
+256	76.95312500
+257	77.04280156
+258	77.13178295
+259	77.22007722
+260	77.30769231
+261	77.39463602
+262	77.48091603
+263	77.56653992
+264	77.65151515
+265	77.73584906
+266	77.81954887
+267	77.52808989
+268	77.23880597
+269	76.95167286
+270	77.03703704
+271	77.12177122
+272	76.83823529
+273	76.92307692
+274	76.64233577
+275	76.72727273
+276	76.44927536
+277	76.53429603
+278	76.25899281
+279	75.98566308
+280	76.07142857
+281	76.15658363
+282	76.24113475
+283	76.32508834
+284	76.40845070
+285	76.49122807
+286	76.57342657
+287	76.65505226
+288	76.73611111
+289	76.81660900
+290	76.55172414
+291	76.28865979
+292	76.36986301
+293	76.10921502
+294	76.19047619
+295	75.93220339
+296	75.67567568
+297	75.75757576
+298	75.83892617
+299	75.91973244
+300	76.00000000
+301	75.74750831
+302	75.82781457
+303	75.90759076
+304	75.98684211
+305	76.06557377
+306	76.14379085
+307	76.22149837
+308	75.97402597
+309	76.05177994
+310	76.12903226
+311	76.20578778
+312	76.28205128
+313	76.35782748
+314	76.43312102
+315	76.50793651
+316	76.58227848
+317	76.65615142
+318	76.72955975
+319	76.80250784
+320	76.87500000
+321	76.94704050
+322	77.01863354
+323	76.78018576
+324	76.85185185
+325	76.61538462
+326	76.68711656
+327	76.45259939
+328	76.21951220
+329	76.29179331
+330	76.36363636
+331	76.43504532
+332	76.50602410
+333	76.57657658
+334	76.64670659
+335	76.71641791
+336	76.78571429
+337	76.85459941
+338	76.92307692
+339	76.99115044
+340	77.05882353
+341	77.12609971
+342	77.19298246
+343	77.25947522
+344	77.32558140
+345	77.10144928
+346	77.16763006
+347	76.94524496
+348	77.01149425
+349	77.07736390
+350	76.85714286
+351	76.92307692
+352	76.98863636
+353	77.05382436
+354	77.11864407
+355	77.18309859
+356	77.24719101
+357	77.31092437
+358	77.09497207
+359	77.15877437
+360	76.94444444
+361	77.00831025
+362	77.07182320
+363	77.13498623
+364	76.92307692
+365	76.71232877
+366	76.77595628
+367	76.83923706
+368	76.90217391
+369	76.69376694
+370	76.75675676
+371	76.81940701
+372	76.88172043
+373	76.67560322
+374	76.73796791
+375	76.80000000
+376	76.86170213
+377	76.92307692
+378	76.98412698
+379	76.78100264
+380	76.84210526
+381	76.90288714
+382	76.96335079
+383	76.76240209
+384	76.82291667
+385	76.88311688
+386	76.94300518
+387	77.00258398
+388	77.06185567
+389	77.12082262
+390	77.17948718
+391	76.98209719
+392	77.04081633
+393	76.84478372
+394	76.90355330
+395	76.70886076
+396	76.76767677
+397	76.82619647
+398	76.88442211
+399	76.69172932
+400	76.75000000
+401	76.80798005
+402	76.86567164
+403	76.67493797
+404	76.48514851
+405	76.54320988
+406	76.35467980
+407	76.41277641
+408	76.47058824
+409	76.52811736
+410	76.58536585
+411	76.64233577
+412	76.69902913
+413	76.75544794
+414	76.81159420
+415	76.62650602
+416	76.68269231
+417	76.73860911
+418	76.79425837
+419	76.84964200
+420	76.90476190
+421	76.95961995
+422	77.01421801
+423	77.06855792
+424	77.12264151
+425	77.17647059
+426	77.23004695
+427	77.28337237
+428	77.33644860
+429	77.38927739
+430	77.20930233
+431	77.26218097
+432	77.31481481
+433	77.36720554
+434	77.41935484
+435	77.24137931
+436	77.06422018
+437	76.88787185
+438	76.94063927
+439	76.76537585
+440	76.81818182
+441	76.87074830
+442	76.92307692
+443	76.97516930
+444	77.02702703
+445	77.07865169
+446	77.13004484
+447	76.95749441
+448	77.00892857
+449	77.06013363
+450	77.11111111
+451	77.16186253
+452	77.21238938
+453	77.26269316
+454	77.31277533
+455	77.14285714
+456	77.19298246
+457	77.24288840
+458	77.07423581
+459	77.12418301
+460	77.17391304
+461	77.00650759
+462	77.05627706
+463	76.88984881
+464	76.72413793
+465	76.77419355
+466	76.82403433
+467	76.87366167
+468	76.92307692
+469	76.97228145
+470	76.80851064
+471	76.64543524
+472	76.69491525
+473	76.53276956
+474	76.58227848
+475	76.42105263
+476	76.47058824
+477	76.51991614
+478	76.56903766
+479	76.61795407
+480	76.66666667
+481	76.71517672
+482	76.55601660
+483	76.39751553
+484	76.23966942
+485	76.28865979
+486	76.13168724
+487	76.18069815
+488	76.22950820
+489	76.27811861
+490	76.32653061
+491	76.37474542
+492	76.42276423
+493	76.47058824
+494	76.51821862
+495	76.56565657
+496	76.61290323
+497	76.65995976
+498	76.70682731
+499	76.75350701
+500	76.80000000
+501	76.64670659
+502	76.69322709
+503	76.54075547
+504	76.58730159
+505	76.63366337
+506	76.67984190
+507	76.52859961
+508	76.57480315
+509	76.62082515
+510	76.66666667
+511	76.71232877
+512	76.75781250
+513	76.80311891
+514	76.84824903
+515	76.89320388
+516	76.74418605
+517	76.78916828
+518	76.83397683
+519	76.68593449
+520	76.73076923
+521	76.77543186
+522	76.81992337
+523	76.67304015
+524	76.71755725
+525	76.76190476
+526	76.61596958
+527	76.47058824
+528	76.51515152
+529	76.55954631
+530	76.60377358
+531	76.64783427
+532	76.69172932
+533	76.73545966
+534	76.77902622
+535	76.82242991
+536	76.86567164
+537	76.90875233
+538	76.95167286
+539	76.99443414
+540	77.03703704
+541	76.89463956
+542	76.93726937
+543	76.97974217
+544	77.02205882
+545	76.88073394
+546	76.92307692
+547	76.96526508
+548	77.00729927
+549	77.04918033
+550	77.09090909
+551	76.95099819
+552	76.99275362
+553	77.03435805
+554	77.07581227
+555	77.11711712
+556	77.15827338
+557	77.19928187
+558	77.24014337
+559	77.28085868
+560	77.14285714
+561	77.18360071
+562	77.22419929
+563	77.08703375
+564	77.12765957
+565	77.16814159
+566	77.20848057
+567	77.24867725
+568	77.28873239
+569	77.15289982
+570	77.19298246
+
+Final result: 77.1930 +/- 1.7590
+Random chance: 24.9890 +/- 1.8150
+
+
+llama_perf_context_print:        load time =   15955.18 ms
+llama_perf_context_print: prompt eval time =   16925.24 ms / 24877 tokens (    0.68 ms per token,  1469.82 tokens per second)
+llama_perf_context_print:        eval time =       0.00 ms /     1 runs   (    0.00 ms per token,      inf tokens per second)
+llama_perf_context_print:       total time =   38307.11 ms / 24878 tokens
+llama_perf_context_print:    graphs reused =          0
+common_memory_breakdown_print: | memory breakdown [MiB]                            | total    free     self   model   context   compute    unaccounted |
+common_memory_breakdown_print: |   - CUDA0 (RTX PRO 6000 Blackwell Server Edition) | 97249 = 20216 + (34030 = 30658 +    3072 +     300) +       43002 |
+common_memory_breakdown_print: |   - Host                                          |                    387 =   315 +       0 +      72                |
+streamllm-ext routing: sentinel_claims=0 forward_moe_layer_calls=0
+streamllm-ext correctness: required_set_misses=0 comp_execute=0 kernel_launch=0 n_chunks_oob=0
+streamllm-ext eviction: total=0 during_dispatch=0

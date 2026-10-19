@@ -1,0 +1,11 @@
+{
+  "config": "dynamic_k4",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "hellaswag",
+  "n_total": 10042,
+  "n_parallel": 4,
+  "acc_pct": 62.6768,
+  "stderr_pct": 0.4827,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/dynamic_k4/llama_mc/hellaswag.log"
+}

@@ -1,0 +1,11 @@
+{
+  "config": "Q8_0",
+  "model": "Qwen3-30B-A3B",
+  "benchmark": "winogrande",
+  "n_total": 1267,
+  "n_parallel": 8,
+  "acc_pct": 62.6677,
+  "stderr_pct": 1.3594,
+  "method": "llama-perplexity --multiple-choice",
+  "log": "/home/jaeyun/workspace/StreamLLM/experiments/results/Qwen3-30B-A3B/bench/Q8_0/llama_mc/winogrande.log"
+}
