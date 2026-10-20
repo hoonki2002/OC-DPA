@@ -1,0 +1,6 @@
+cache/
+figs/
+third_party/
+__pycache__/
+*.pyc
+*.egg-info/
