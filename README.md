@@ -74,7 +74,7 @@ python ../scripts/23_downstream_generation.py --mode analog --configs "DPA4-8,un
 | Fig. 4 right: KL vs cell variation | stages `sigma_experts`, `sigma_dense` | `results/sigma_olmoe_*.json` | 1 h |
 | KL with all planes in crossbars | stage `kl_xbar` | `results/kl_olmoe_xbar.json` | 7 min |
 | Table III: HellaSwag, WinoGrande, BoolQ | `22_downstream_choice.py` (GPU) | `results/downstream_mc_*.json` | 1.5 h / config |
-| Table III: GSM8K, HumanEval | `23_downstream_generation.py` (GPU) | `results/downstream_gen_*.json` | hours / config |
+| Table III: GSM8K, HumanEval | `23_downstream_generation.py` (GPU) | `cache/gen_*.json` | hours / config |
 
 Settings of the reported results: `--noise "mixed,0.01,0.02,cal"` (1 % cell variation in 1T1R planes, 2 % in crossbar planes,
 IR-drop with a global gain trim), prefill budget 4, decode at k = 8, KL of 256 continuation tokens after a 1024-token prompt,

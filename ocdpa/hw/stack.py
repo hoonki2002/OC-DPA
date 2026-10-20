@@ -49,6 +49,9 @@ LOGIC_NODE = int(os.environ.get("OCDPA_LOGIC_NODE", "22"))
 RON = 300000
 
 
+CELLS_PER_BIT = 2
+
+
 def probe(tech: int, mux: int, access: int = 1, n: int = 128, colcap_ff: float = 0.0) -> dict:
     """Component areas (um2) and energies (pJ per subarray read).
 
@@ -124,6 +127,7 @@ class Stack:
         local = (e["array"] + e["wlSwitch"] + e["mux"] + e["muxDecoder"]) / COLS - tsv_out
         adc = (le["sarADC"] + le["shiftAddWeight"]) / COLS
         tsv_in = ROWS / self.input_share * TSV_BIT_FJ * 1e-3 / COLS
+        local *= CELLS_PER_BIT
         return dict(local=local, adc=adc, tsv_out=tsv_out, tsv_in=tsv_in,
                     total=local + adc + tsv_out + tsv_in)
 
@@ -138,12 +142,14 @@ class Tier:
     n: int = 128
     share: int = 16
     planes: int = 8
+    cells: int = CELLS_PER_BIT
 
 
 def hetero_area(params: float, tiers_spec: list[Tier], tiers=16, mux=8,
                 write_share=16, input_share=1, lane_sets="tile"):
     """Footprint (mm2) of a stack holding `params` weights as 8 bit-planes,
-    split across subarray kinds.
+    split across subarray kinds. A sign plane is a differential pair of cells (`Tier.cells`, two per
+    weight bit; one for digital cells), the two columns of a pair share one ADC.
 
     `lane_sets` says how the ADC lanes of the logic tier are provisioned. The timing model
     (compare.layer_cost, Eq. 1 of the paper) reads the planes of an expert one after the other
@@ -167,7 +173,7 @@ def hetero_area(params: float, tiers_spec: list[Tier], tiers=16, mux=8,
     lane_area = (lane_logic["sarADC"] + lane_logic["shiftAddWeight"]) / (128 // mux)
     for t in tiers_spec:
         a = probe(22, mux, t.access, t.n)["comp_area_um2"]
-        n_sub = params * t.planes / (t.n * t.n)
+        n_sub = t.cells * params * t.planes / (t.n * t.n)
         n_lane = n_sub if lane_sets == "plane" else params * min(t.planes, 1.0) / (t.n * t.n)
         reads = t.n // 128
         buses = tiers // t.share * reads

@@ -57,9 +57,9 @@ for m in MODELS:
     k_uni = plans(idx, gate, R, args.kbar, m.topk, False)
     k_dpa = plans(idx, gate, R, args.kbar, m.topk, True)
 
-    def run(share, grouped, k_pre, k_dec, scale_bits=None, mux=8, shared_mux=None):
+    def run(share, grouped, k_pre, k_dec, scale_bits=None, mux=8, shared_mux=None, P=1024):
         slots = [placement(loads[l], share, grouped) for l in range(L)]
-        return evaluate(m, idx, k_pre, k_dec, slots, share, npu, scale_bits=scale_bits, mux=mux, shared_mux=shared_mux)
+        return evaluate(m, idx, k_pre, k_dec, slots, share, npu, P=P, scale_bits=scale_bits, mux=mux, shared_mux=shared_mux)
 
     rows = grid(m, idx, loads, npu, {"all planes": (k8, k8, None), "OC-DPA": (k_dpa, k8, SCALE_BITS)})
     b, o = best(rows, "all planes"), best(rows, "OC-DPA")
@@ -89,6 +89,12 @@ for m in MODELS:
                 ttft_ms=r["prefill"]["ttft_ms"], decode_ms=r["decode"]["ms"], mem_mm2=r["mem_mm2"],
                 logic_mm2=r["logic_mm2"], footprint_mm2=r["footprint_mm2"])
 
+    sharing_p = {}
+    for P in (1024, 4096):
+        for s_ in (1, 2, 4, 8, 16):
+            r = run(s_, True, k8, k8, None, b["mux"], b["shared_mux"], P=P)
+            sharing_p[f"P{P}_s{s_}"] = dict(ttft_ms=r["prefill"]["ttft_ms"], expert_ms=r["prefill"]["expert_ms"])
+
     budget = {}
     for kb in range(2, 9):
         for name, dpa in (("uniform", False), ("DPA", True)):
@@ -111,7 +117,7 @@ for m in MODELS:
     dense_aimc = dense_step(replace(m, shared_inter=0) if on_aimc else m, NPU(), 1, 1024)
     dec_aimc = designs["3D-AIMC"]["decode"]["ms"]
     out[m.name] = dict(
-        designs=designs, configs=configs, grid=rows, sharing=sharing, sharing_mux=b["mux"], budget=budget, prompt=prompt,
+        designs=designs, configs=configs, grid=rows, sharing=sharing, sharing_mux=b["mux"], budget=budget, prompt=prompt, sharing_p=sharing_p,
         same_area=same_area, same_ttft=same_ttft,
         decode=dict(flash=dict(npu_ms=dense_flash["latency_ms"], experts_ms=flash_ms,
                                mJ=dense_flash["dram_mJ"] + flash_mJ),

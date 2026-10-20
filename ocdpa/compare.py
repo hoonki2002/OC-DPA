@@ -107,7 +107,7 @@ def scale_storage_mm2(params, scale_bits):
     if not scale_bits:
         return 0.0
     bits_per_weight = (KMAX + 1) * scale_bits / GS
-    return hetero_area(params, [Tier(4, 256, 16, bits_per_weight)], tiers=TIERS, input_share=8)["mem_mm2"]
+    return hetero_area(params, [Tier(4, 256, 16, bits_per_weight, cells=1)], tiers=TIERS, input_share=8)["mem_mm2"]
 
 
 def shared_area(m, scale_bits=None, mux=None):
